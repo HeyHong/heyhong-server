@@ -32,18 +32,18 @@ public class UsersRepositoryTest {
         System.out.println(savedUser.getUpdatedAt());
     }
 
-    @Test
-    @Transactional
-    @DisplayName("Auditing 기능 적용 - 수정")
-    public void updateUsers(){
-        //given
-        Optional<Users> user = usersRepository.findById(1L);
-        // when
-        user.get().setNickname("hey");
-
-        // then
-        System.out.println(user.get().getCreatedAt());
-        System.out.println(user.get().getUpdatedAt());
-    }
+//    @Test
+//    @Transactional
+//    @DisplayName("Auditing 기능 적용 - 수정")
+//    public void updateUsers(){
+//        //given
+//        Optional<Users> user = usersRepository.findById(1L);
+//        // when
+//        user.get().setNickname("hey");
+//
+//        // then
+//        System.out.println(user.get().getCreatedAt());
+//        System.out.println(user.get().getUpdatedAt());
+//    }
 
 }
