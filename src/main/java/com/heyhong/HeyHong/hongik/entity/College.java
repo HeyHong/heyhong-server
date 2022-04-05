@@ -17,6 +17,8 @@ public class College extends BaseAuditingEntity {
     @GeneratedValue
     private Long id;
 
+    private String name;
+
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "college")
     private List<Department> departments = new ArrayList<>();
 
