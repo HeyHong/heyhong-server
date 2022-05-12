@@ -1,8 +1,11 @@
 package com.heyhong.HeyHong.users.entity;
 
+import com.heyhong.HeyHong.building.entity.RoomComment;
 import com.heyhong.HeyHong.config.auditing.BaseAuditingEntity;
 import com.heyhong.HeyHong.hongik.entity.College;
 import com.heyhong.HeyHong.hongik.entity.Department;
+import com.heyhong.HeyHong.notice.entity.DepartmentNoticeComment;
+import com.heyhong.HeyHong.notice.entity.SchoolNoticeComment;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "users")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,12 +29,13 @@ public class Users extends BaseAuditingEntity implements UserDetails {
     @Column(name="user_id")
     private Long id;
 
+    @Column(name="id")
     private String userId;
 
     private String password;
 
     @Enumerated(EnumType.ORDINAL)
-    private Status status;
+    private Status status = Status.ACTIVE;
 
     private String nickname;
 
@@ -41,7 +44,7 @@ public class Users extends BaseAuditingEntity implements UserDetails {
     private String email;
 
     public enum Status{
-        ACTIVE, INACTIVE
+        INACTIVE, ACTIVE
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,6 +54,18 @@ public class Users extends BaseAuditingEntity implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<RoomComment> roomComments = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<SchoolNoticeComment> schoolNoticeComments = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<DepartmentNoticeComment> departmentNoticeComments = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<NoticeScrap> noticeScraps = new ArrayList<>();
 
     public void setNickname(String nickname) {
         this.nickname = nickname;

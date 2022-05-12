@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 public class BaseAuditingEntity {
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime updateAt;
 
     @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
+    @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createAt;
 
 }

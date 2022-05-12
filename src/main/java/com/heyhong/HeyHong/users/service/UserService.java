@@ -47,11 +47,11 @@ public class UserService {
      * @throws IllegalArgumentException
      */
     public Long signIn(String userId, String password, String nickname, String studentId, String email, String collegeName, String departmentName) throws IllegalArgumentException{
-
+        System.out.println("hello");
         College college = collegeRepository.findByName(collegeName).orElseThrow(()->new IllegalArgumentException("해당 대학이 존재하지 않습니다. client validation 확인"));
         Department department = departmentRepository.findByName(departmentName).orElseThrow(()-> new IllegalArgumentException("해당 과가 존재하지 않습니다. client validation 확인"));
 
-
+        System.out.println("hi");
         return this.save(Users.builder()
                 .userId(userId)
                 .password(passwordEncode(password))
@@ -62,6 +62,16 @@ public class UserService {
                 .department(department)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
+    }
+
+
+    public boolean validateNickName(String studnetId){
+        if(usersRepository.findByStudentId(studnetId) == null){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 

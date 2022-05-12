@@ -17,18 +17,18 @@ public class UsersRepositoryTest {
     @Autowired
     UsersRepository usersRepository;
 
-    @Test
-    @DisplayName("Auditing 기능 적용")
-    public void insertUsers(){
-        //given
-        Users user = new Users();
-        // when
-        Users savedUser = usersRepository.save(user);
-
-        // then
-        System.out.println(savedUser.getCreatedAt());
-        System.out.println(savedUser.getUpdatedAt());
-    }
+//    @Test
+//    @DisplayName("Auditing 기능 적용")
+//    public void insertUsers(){
+//        //given
+//        Users user = new Users();
+//        // when
+//        Users savedUser = usersRepository.save(user);
+//
+//        // then
+//        System.out.println(savedUser.getCreatedAt());
+//        System.out.println(savedUser.getUpdatedAt());
+//    }
 
 //    @Test
 //    @Transactional
