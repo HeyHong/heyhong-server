@@ -25,6 +25,7 @@ public class Room extends BaseAuditingEntity {
     @JoinColumn(name = "floor_id")
     private Floor floor;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 

@@ -22,9 +22,11 @@ public class SchoolNoticeCategory extends BaseAuditingEntity {
     @Column(name = "school_notice_category_id")
     private Long id;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "schoolNoticeCategory")
     private List<SchoolNotice> schoolNotices = new ArrayList<>();
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 

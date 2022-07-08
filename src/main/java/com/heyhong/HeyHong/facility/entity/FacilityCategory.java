@@ -22,13 +22,18 @@ public class FacilityCategory extends BaseAuditingEntity {
     @Column(name="facility_category_id")
     private Long id;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
+
+    @Column(name="category_group", length = 25, nullable = false)
+    private String categoryGroup;
 
     @Column(name="name", length = 25, nullable = false)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "facilityCategory")
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Facility> facilities = new ArrayList<>();
 
     public enum Status{

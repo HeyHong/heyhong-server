@@ -23,6 +23,7 @@ public class Building extends BaseAuditingEntity {
     @Column(name = "building_id")
     private Long id;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
@@ -38,6 +39,7 @@ public class Building extends BaseAuditingEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "building")
     private List<Floor> floors = new ArrayList<>();
 

@@ -19,31 +19,42 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private final JwtTokenProvider jwtTokenProvider;
+//    @Autowired
+//    private final JwtTokenProvider jwtTokenProvider;
+//
+//    // passwordEncoder를 bean으로 등록
+//    @Bean
+//    public PasswordEncoder passwordEncoder(){
+//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//    }
+//
+//    // authenticationManager를 bean으로 등록
+//    @Bean
+//    @Override
+//    public AuthenticationManager authenticationManagerBean() throws Exception{
+//        return super.authenticationManagerBean();
+//    }
 
-    // passwordEncoder를 bean으로 등록
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
-    // authenticationManager를 bean으로 등록
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception{
-        return super.authenticationManagerBean();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic()
+//        http.httpBasic()
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .antMatchers("/user/**").hasRole("USER")
+//                .antMatchers("/**").permitAll();
+
+//        http.csrf().disable();
+        http
+                .httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/**").permitAll();
-
-        http.csrf().disable();
+                .antMatchers("/admin/**/**").hasRole("ADMIN")
+                .antMatchers("/app/users/**").permitAll()
+                .anyRequest().authenticated()
     }
 }

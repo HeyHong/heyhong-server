@@ -22,6 +22,7 @@ public class CouncilNoticeImage extends BaseAuditingEntity {
     @Column(name = "council_notice_image_id")
     private Long id;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 

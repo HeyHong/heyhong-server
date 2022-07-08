@@ -23,18 +23,22 @@ public class NoticeTag extends BaseAuditingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_tag_id")
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
     @Column(name = "name", nullable = false, length = 15)
     private String name;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "noticeTag")
     private List<SchoolNotice> schoolNotices = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "noticeTag")
     private List<DepartmentNotice> departmentNotices = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "noticeTag")
     private List<CouncilNotice> councilNotices = new ArrayList<>();
 

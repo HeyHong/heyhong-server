@@ -26,6 +26,7 @@ public class DepartmentNotice extends BaseAuditingEntity {
     @Column(name = "department_notice_id")
     private Long id;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
@@ -48,6 +49,7 @@ public class DepartmentNotice extends BaseAuditingEntity {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "departmentNotice")
     private List<DepartmentNoticeComment> departmentNoticeComments = new ArrayList<>();
 
@@ -55,6 +57,7 @@ public class DepartmentNotice extends BaseAuditingEntity {
     @JoinColumn(name = "notice_tag_id")
     private NoticeTag noticeTag;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "departmentNotice")
     private List<NoticeScrap> noticeScraps = new ArrayList<>();
 

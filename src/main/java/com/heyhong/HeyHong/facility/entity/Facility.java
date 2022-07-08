@@ -32,6 +32,7 @@ public class Facility extends BaseAuditingEntity {
     @JoinColumn(name = "parent_facility_id")
     private Facility parent;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Facility> facilities = new ArrayList<>();
 
@@ -39,13 +40,14 @@ public class Facility extends BaseAuditingEntity {
     @JoinColumn(name = "floor_id")
     private Floor floor;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
     @Column(name="name", length = 25, nullable = false)
     private String name;
 
-    @Column(name = "location", length = 10, nullable = false)
+    @Column(name = "location", length = 10, nullable = true)
     private String location;
 
     @Column(name = "image_url", columnDefinition = "TEXT")

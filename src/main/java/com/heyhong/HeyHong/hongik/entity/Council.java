@@ -24,6 +24,7 @@ public class Council extends BaseAuditingEntity {
     @Column(name = "council_id")
     private Long id;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
@@ -39,6 +40,7 @@ public class Council extends BaseAuditingEntity {
     @Column(name = "logo_img_url", columnDefinition = "TEXT")
     private String logoImgUrl;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "council")
     private List<CouncilNotice> councilNotices = new ArrayList<>();
 

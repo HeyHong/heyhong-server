@@ -31,6 +31,7 @@ public class LikeFacility extends BaseAuditingEntity {
     @JoinColumn(name = "facility_category_id")
     private FacilityCategory facilityCategory;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 

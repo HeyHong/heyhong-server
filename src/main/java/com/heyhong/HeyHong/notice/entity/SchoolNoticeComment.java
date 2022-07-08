@@ -35,9 +35,11 @@ public class SchoolNoticeComment extends BaseAuditingEntity {
     @JoinColumn(name = "parent_school_notice_comment_id")
     private SchoolNoticeComment parent;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<SchoolNoticeComment> children = new ArrayList<>();
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 

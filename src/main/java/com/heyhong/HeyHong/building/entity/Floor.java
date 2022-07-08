@@ -34,12 +34,15 @@ public class Floor extends BaseAuditingEntity {
     @JoinColumn(name = "building_id")
     private Building building;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "floor")
     private List<Room> rooms = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "floor")
     private List<Facility> facilities = new ArrayList<>();
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Users.Status status = Users.Status.ACTIVE;
 

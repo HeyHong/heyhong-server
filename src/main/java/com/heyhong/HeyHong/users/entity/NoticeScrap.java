@@ -39,6 +39,7 @@ public class NoticeScrap extends BaseAuditingEntity {
     @JoinColumn(name = "user_id")
     private Users user;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 

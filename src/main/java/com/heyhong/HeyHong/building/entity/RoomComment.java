@@ -35,12 +35,15 @@ public class RoomComment extends BaseAuditingEntity {
     @JoinColumn(name = "parent_room_comment_id")
     private RoomComment parent;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<RoomComment> children = new ArrayList<>();
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private AnonymousStatus anonymous = AnonymousStatus.INACTIVE;
 

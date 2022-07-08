@@ -34,6 +34,7 @@ public class Users extends BaseAuditingEntity implements UserDetails {
 
     private String password;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
@@ -55,15 +56,19 @@ public class Users extends BaseAuditingEntity implements UserDetails {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<RoomComment> roomComments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<SchoolNoticeComment> schoolNoticeComments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<DepartmentNoticeComment> departmentNoticeComments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<NoticeScrap> noticeScraps = new ArrayList<>();
 

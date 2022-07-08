@@ -25,6 +25,7 @@ public class CouncilNotice extends BaseAuditingEntity {
     @Column(name = "council_notice_id")
     private Long id;
 
+    @Builder.Default
     @Enumerated(EnumType.ORDINAL)
     private Status status = Status.ACTIVE;
 
@@ -47,6 +48,7 @@ public class CouncilNotice extends BaseAuditingEntity {
     @JoinColumn(name = "council_id")
     private Council council;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "councilNotice")
     private List<CouncilNoticeImage> councilNoticeImages = new ArrayList<>();
 
@@ -54,6 +56,7 @@ public class CouncilNotice extends BaseAuditingEntity {
     @JoinColumn(name = "notice_tag_id")
     private NoticeTag noticeTag;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "councilNotice")
     private List<NoticeScrap> noticeScraps = new ArrayList<>();
 
