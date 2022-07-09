@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -112,8 +113,18 @@ public class JwtProvider {
      * @param token
      * @return userId
      */
-    public String getUserId(String token){
+    public String getUserInfo(String token){
         return (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userId");
+    }
+
+
+    /**
+     * request header > token 값 가져오기
+     * @param request
+     * @return
+     */
+    public String resolveToken(HttpServletRequest request){
+        return request.getHeader("token");
     }
 
 
