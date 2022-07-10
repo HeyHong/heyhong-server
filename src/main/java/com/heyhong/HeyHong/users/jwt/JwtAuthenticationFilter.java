@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtProvider jwtProvider;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse reponse, FilterChain chain) throws IOException, ServletException{
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException{
 
         // 헤더에서 JWT 가져옴
         String token = jwtProvider.resolveToken((HttpServletRequest) request);
@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        chain.doFilter(request, reponse);
+        chain.doFilter(request, response);
 
     }
 

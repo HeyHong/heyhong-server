@@ -23,6 +23,7 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
         String exception = (String) request.getAttribute("exception");
         ErrorCode errorCode;
 
+        System.out.println("--------COMMENCE-------");
         /**
          * 토큰이 없는 경우 예외 처리
          */
@@ -41,6 +42,26 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
             setResponse(response, errorCode);
             return;
         }
+
+        /**
+         * 토큰의 형식이 잘못된 경우
+         */
+        if(exception.equals("MalformedJwtException")){
+            System.out.println(">>>>이상한 토큰<<<<");
+            errorCode = ErrorCode.MalformedJwtException;
+            setResponse(response, errorCode);
+            return;
+        }
+
+        if(exception.equals("UnsupportedJwtException") || exception.equals("IllegalArgumentException")){
+            System.out.println(">>>>토큰 오류<<<<");
+            errorCode = ErrorCode.MalformedJwtException;
+            setResponse(response, errorCode);
+            return;
+        }
+
+
+
     }
 
     private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException{

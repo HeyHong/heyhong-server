@@ -1,13 +1,13 @@
 package com.heyhong.HeyHong.users.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-public class SignInRes {
-    private Long pk;
-    private LoginRes jwtInfo;
+public class UpdateAccessTokenReq {
 
+    private Long refreshIdx;
 }

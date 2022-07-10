@@ -29,9 +29,9 @@ public class JwtProvider {
     private String secretKey;
 
 //    private final long accessExpireTime = 60 * 60 * 1000L; // 1시간
-    private final long accessExpireTime = 1 * 60 * 1000L; // 1분
+    private final long accessExpireTime = 1 * 60 * 1000L * 30; // 30분
 
-    private final long refreshExpireTme = 1 * 60 * 2000L; // 2분
+    private final long refreshExpireTme = 1 * 60 * 1000L * 60 * 24 * 200; // 200일
 
 
     private final CustomUserDetailService customUserDetailService;
@@ -104,7 +104,7 @@ public class JwtProvider {
      * @return
      */
     public Authentication getAuthentication(String token){
-        UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserId(token));
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserInfo(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -139,12 +139,15 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
             return true;
         } catch (MalformedJwtException e) {
+            System.out.println("<<<<<<JWT MAL>>>>>>");
             request.setAttribute("exception", "MalformedJwtException");
         } catch (ExpiredJwtException e) {
             request.setAttribute("exception", "ExpiredJwtException");
         } catch (UnsupportedJwtException e) {
+            System.out.println("<<<<<<JWT UNSU>>>>>>");
             request.setAttribute("exception", "UnsupportedJwtException");
         } catch (IllegalArgumentException e) {
+            System.out.println("<<<<<<JWT ILLE>>>>>>");
             request.setAttribute("exception", "IllegalArgumentException");
         }
 

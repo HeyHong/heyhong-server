@@ -28,5 +28,6 @@ public class WebAccessDenialHandler implements AccessDeniedHandler {
         json.put("code", errorCode.getCode());
         json.put("message", errorCode.getMessage());
         response.getWriter().print(json);
+
     }
 }
