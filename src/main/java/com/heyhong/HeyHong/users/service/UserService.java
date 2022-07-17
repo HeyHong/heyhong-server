@@ -4,14 +4,22 @@ import com.heyhong.HeyHong.hongik.entity.College;
 import com.heyhong.HeyHong.hongik.entity.Department;
 import com.heyhong.HeyHong.hongik.repository.CollegeRepository;
 import com.heyhong.HeyHong.hongik.repository.DepartmentRepository;
+import com.heyhong.HeyHong.users.dto.CheckConfirmEmailReq;
+import com.heyhong.HeyHong.users.entity.ConfirmationToken;
 import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.jwt.JwtTokenProvider;
+import com.heyhong.HeyHong.users.repository.ConfirmationTokenRepository;
 import com.heyhong.HeyHong.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,6 +31,9 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final CollegeRepository collegeRepository;
     private final DepartmentRepository departmentRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final EmailService emailService;
+
 
     /**
      * 회원 entity 저장
@@ -93,6 +104,118 @@ public class UserService {
         return jwtTokenProvider.createToken(user.getUserId(), user.getRoles());
     }
 
+
+    /**
+     * 아이디 중복 체크
+     * @param userID
+     * @return 중복 x - true / 중복 - false
+     */
+    public boolean validateUserId(String userID){
+
+        Optional<Users> user = usersRepository.findByUserId(userID);
+
+        if(!user.isPresent()){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    /**
+     * 닉네임 중복 체크
+     * @param nickname
+     * @return 중복 x - true / 중복 - false
+     */
+    public boolean validateNickname(String nickname){
+
+        Optional<Users> user = usersRepository.findByNickname(nickname);
+
+        if(!user.isPresent()){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    /**
+     * 인증메일 전송
+     * @param email
+     * @return
+     */
+    @Transactional
+    public Long createEmailConfirmation(String email){
+
+        if(!checkHongikEmailFormat(email)){
+            throw new IllegalArgumentException("학우의 이메일이 아닙니다");
+        }
+
+        // 인증 번호 생성 및 인증 번호 저장
+        ConfirmationToken confirmationToken = new ConfirmationToken(email);
+        Long confirmationTokenPk;
+
+        try{
+            confirmationTokenPk = confirmationTokenRepository.save(confirmationToken).getId();
+        }catch (Exception e){
+            throw e;
+        }
+
+        try{
+
+            String subject = "[헤이홍] 회원가입 인증";
+            String text = "안녕하세요 학우님! 헤이홍 회원가입을 환영합니다 <br/>" +
+                    " 회원가입을 위한 인증번호 : <b> " + confirmationToken.getConfirmKey() + "</b><br/> 어플로 돌아가서 인증번호 입력 후, 홍대생 인증이 되면 빠르게 회원가입 진행해드리겠습니다!";
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(email);
+            mailMessage.setSubject(subject);
+            mailMessage.setText(text);
+            emailService.sendEmail(mailMessage);
+
+        }catch (Exception e){
+            throw e;
+        }
+
+        //confirmationToken 저장되어있는 pk값 반환
+        return confirmationTokenPk;
+
+    }
+
+
+
+    @Transactional
+    public boolean checkConfirmEmail(Long confirmPk, String email, String confirmCode){
+
+        Optional<ConfirmationToken> token = confirmationTokenRepository.findByIdAndStatus(confirmPk, 1);
+        if(!token.isPresent()){
+            throw new NoSuchElementException("해당 토큰이 존재하지 않습니다");
+        }
+
+        if(!token.get().getEmail().equals(email)){
+            throw new IllegalArgumentException("이메일이 일치하지 않습니다");
+        }
+
+        //인증 유효시간 체크
+        if(!token.get().checkTokenStatus()){
+            confirmationTokenRepository.save(token.get());
+            throw new IllegalArgumentException("인증 유효시간이 만료되었습니다.");
+        }
+
+        if(token.get().getConfirmKey().equals(confirmCode)){
+            token.get().useToken();
+            confirmationTokenRepository.save(token.get());
+            return true;
+        }
+        else{
+            return false;
+        }
+
+
+    }
+
+
     /**
      * password 인코딩
      * @param password
@@ -100,6 +223,24 @@ public class UserService {
      */
     private String passwordEncode(String password){
         return passwordEncoder.encode(password);
+    }
+
+
+    /**
+     * 이메일 도메인 확인 - 홍익대학교
+     * @param email
+     * @return
+     */
+    private boolean checkHongikEmailFormat(String email){
+        String[] tokens = email.split("@");
+
+        if(tokens[1].equals("g.hongik.ac.kr")){
+            return true;
+        }
+        else{
+            return false;
+        }
+
     }
 
 
