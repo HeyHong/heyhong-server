@@ -1,5 +1,6 @@
 package com.heyhong.HeyHong.users.controller;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.heyhong.HeyHong.config.response.BaseResponse;
 import com.heyhong.HeyHong.config.response.BaseResponseStatus;
 import com.heyhong.HeyHong.users.dto.*;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -80,7 +83,11 @@ public class UsersController {
     }
 
 
-
+    /**
+     * 회원가입 - 이메일 인증 STEP1 전송
+     * @param req
+     * @return
+     */
     @ResponseBody
     @PostMapping("/sign-in/confirm/email")
     public ResponseEntity<BaseResponse> sendConfirmEmail(@RequestBody SendConfirmEmailReq req){
@@ -104,6 +111,11 @@ public class UsersController {
     }
 
 
+    /**
+     * 회원가입 - 이메일 인증 STEP2 check
+     * @param req
+     * @return
+     */
     @ResponseBody
     @PostMapping("/sign-in/confirm/email/check")
     public ResponseEntity<BaseResponse> checkConfirmEmail(@RequestBody CheckConfirmEmailReq req){
@@ -121,6 +133,27 @@ public class UsersController {
             BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
 
+        }
+
+
+    }
+
+
+
+    @ResponseBody
+    @GetMapping("/sign-in/college-dept")
+    public ResponseEntity<BaseResponse> getCollegeDeptList(){
+
+
+        try{
+            List<CollegeDeptDto> result = userService.getCollegeDeptList();
+
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, result);
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
+
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
         }
 
 

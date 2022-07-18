@@ -19,6 +19,10 @@ public enum BaseResponseStatus {
     FORBIDDEN(false, HttpStatus.FORBIDDEN, "잘못된 접근입니다. 리소스를 찾을 수 없습니다."),
     REQUEST_ERROR(false,HttpStatus.BAD_REQUEST, "input값에 문제가 있습니다. 파라미터를 확인해주세요."),
 
+    /**
+     * 5XX code
+     */
+    SERVER_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR, "서버내부 오류입니다"),
 
     /**
      * User 관련

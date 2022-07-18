@@ -5,6 +5,7 @@ import com.heyhong.HeyHong.hongik.entity.Department;
 import com.heyhong.HeyHong.hongik.repository.CollegeRepository;
 import com.heyhong.HeyHong.hongik.repository.DepartmentRepository;
 import com.heyhong.HeyHong.users.dto.CheckConfirmEmailReq;
+import com.heyhong.HeyHong.users.dto.CollegeDeptDto;
 import com.heyhong.HeyHong.users.entity.ConfirmationToken;
 import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.jwt.JwtTokenProvider;
@@ -18,9 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -213,6 +212,29 @@ public class UserService {
         }
 
 
+    }
+
+
+
+    public List<CollegeDeptDto> getCollegeDeptList(){
+        List<College> colleges = collegeRepository.findAll();
+        List<CollegeDeptDto> collegeDepts = new ArrayList<>();
+        for(College c : colleges){
+            collegeDepts.add(new CollegeDeptDto(c.getName(), c.getId()));
+        }
+
+        List<Department> departments = departmentRepository.findAll();
+        for(Department d : departments){
+            Long deptCollegePk = d.getCollege().getId();
+            for(CollegeDeptDto cd : collegeDepts){
+                if(cd.getCollegePk() == deptCollegePk){
+                    cd.addDepartment(d.getName(), d.getId());
+                    break;
+                }
+            }
+        }
+
+        return collegeDepts;
     }
 
 
