@@ -14,6 +14,6 @@ public class SignInReq {
     private String nickname;
     private String studentId;
     private String email;
-    private String college;
-    private String department;
+    private Long collegePk;
+    private Long departmentPk;
 }

@@ -21,6 +21,7 @@ bin/
 application-db.yml
 application-s3.yml
 application-jwt.yml
+application-mail.yml
 
 .idea
 *.iws
