@@ -51,17 +51,23 @@ public class UserService {
      * @param nickname
      * @param studentId
      * @param email
-     * @param collegeName
-     * @param departmentName
+     * @param collegePk
+     * @param departmentPk
      * @return Long - 회원 id(pk)
      * @throws IllegalArgumentException
      */
-    public Long signIn(String userId, String password, String nickname, String studentId, String email, String collegeName, String departmentName) throws IllegalArgumentException{
-        System.out.println("hello");
-        College college = collegeRepository.findByName(collegeName).orElseThrow(()->new IllegalArgumentException("해당 대학이 존재하지 않습니다. client validation 확인"));
-        Department department = departmentRepository.findByName(departmentName).orElseThrow(()-> new IllegalArgumentException("해당 과가 존재하지 않습니다. client validation 확인"));
+    public Long signIn(String userId, String password, String nickname, String studentId, String email, Long collegePk, Long departmentPk) throws Exception{
 
-        System.out.println("hi");
+        // 이메일 인증 여부 확인
+        ConfirmationToken cToken = confirmationTokenRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("해당 이메일 인증 토큰이 존재하지 않습니다"));
+        if(cToken.getStatus() != ConfirmationToken.Status.SUCCESS){
+            throw new Exception("이메일 인증이 완료되지 않은 계정입니다.");
+        }
+
+        // 학부, 학과 fetch
+        College college = collegeRepository.findById(collegePk).orElseThrow(()->new NoSuchElementException("해당 대학이 존재하지 않습니다. client validation 확인"));
+        Department department = departmentRepository.findById(departmentPk).orElseThrow(()-> new NoSuchElementException("해당 과가 존재하지 않습니다. client validation 확인"));
+        
         return this.save(Users.builder()
                 .userId(userId)
                 .password(passwordEncode(password))

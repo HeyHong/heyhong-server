@@ -34,7 +34,7 @@ public class UsersController {
     public ResponseEntity<BaseResponse> signIn(@RequestBody SignInReq req){
         System.out.println("here");
         try{
-            Long userPk = userService.signIn(req.getUserId(), req.getPassword(), req.getNickname(), req.getStudentId(), req.getEmail(), req.getCollege(), req.getDepartment());
+            Long userPk = userService.signIn(req.getUserId(), req.getPassword(), req.getNickname(), req.getStudentId(), req.getEmail(), req.getCollegePk(), req.getDepartmentPk());
 //            return new BaseResponse<>(BaseResponseStatus.OK, new SignInRes(userPk, userService.login(req.getUserId(), req.getPassword())));
             LoginReq tmpLoginReq = new LoginReq(req.getUserId(), req.getPassword());
             BaseResponse res = new BaseResponse(BaseResponseStatus.OK, new SignInRes(userPk, authService.login(tmpLoginReq)) );
@@ -139,7 +139,10 @@ public class UsersController {
     }
 
 
-
+    /**
+     * 회원가입 - 학부/학과 선택
+     * @return
+     */
     @ResponseBody
     @GetMapping("/sign-in/college-dept")
     public ResponseEntity<BaseResponse> getCollegeDeptList(){
