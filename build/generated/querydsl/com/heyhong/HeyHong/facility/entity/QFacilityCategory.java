@@ -31,6 +31,8 @@ public class QFacilityCategory extends EntityPathBase<FacilityCategory> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath imageUrl = createString("imageUrl");
+
     public final StringPath name = createString("name");
 
     public final EnumPath<FacilityCategory.Status> status = createEnum("status", FacilityCategory.Status.class);

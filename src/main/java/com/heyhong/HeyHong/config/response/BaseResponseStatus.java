@@ -18,6 +18,7 @@ public enum BaseResponseStatus {
     RELOGIN(false, HttpStatus.UNAUTHORIZED, "모든 토큰이 만료되었습니다. 다시 로그인해주세요."),
     FORBIDDEN(false, HttpStatus.FORBIDDEN, "잘못된 접근입니다. 리소스를 찾을 수 없습니다."),
     REQUEST_ERROR(false,HttpStatus.BAD_REQUEST, "input값에 문제가 있습니다. 파라미터를 확인해주세요."),
+    DUPLICATE_ERROR(false, HttpStatus.CONFLICT, "중복된 값입니다. 다시 한번 확인해주세요"),
 
     /**
      * 5XX code

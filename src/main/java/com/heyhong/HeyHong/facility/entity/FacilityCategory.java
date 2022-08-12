@@ -32,12 +32,19 @@ public class FacilityCategory extends BaseAuditingEntity {
     @Column(name="name", length = 25, nullable = false)
     private String name;
 
+    @Column(name="image_url", nullable = true)
+    private String imageUrl;
+
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Facility> facilities = new ArrayList<>();
 
     public enum Status{
         INACTIVE, ACTIVE
+    }
+
+    public void setImage(String imageUrl){
+        this.imageUrl = imageUrl;
     }
 
 }

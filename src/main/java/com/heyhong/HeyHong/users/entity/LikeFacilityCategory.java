@@ -1,10 +1,7 @@
 package com.heyhong.HeyHong.users.entity;
 
 import com.heyhong.HeyHong.config.auditing.BaseAuditingEntity;
-import com.heyhong.HeyHong.facility.entity.Facility;
 import com.heyhong.HeyHong.facility.entity.FacilityCategory;
-import com.heyhong.HeyHong.users.entity.Users;
-import com.querydsl.codegen.GeneratedAnnotationResolver;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,11 +14,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LikeFacility extends BaseAuditingEntity {
-
+public class LikeFacilityCategory extends BaseAuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_facility_id")
+    @Column(name = "like_facility_category_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,8 +25,8 @@ public class LikeFacility extends BaseAuditingEntity {
     private Users user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "facility_id")
-    private Facility facility;
+    @JoinColumn(name = "facility_category_id")
+    private FacilityCategory facilityCategory;
 
     @Builder.Default
     @Enumerated(EnumType.ORDINAL)
@@ -40,5 +36,9 @@ public class LikeFacility extends BaseAuditingEntity {
         INACTIVE, ACTIVE
     }
 
-
+    public LikeFacilityCategory(Users user, FacilityCategory facilityCategory){
+        this.user = user;
+        this.facilityCategory = facilityCategory;
+        this.status = Status.ACTIVE;
+    }
 }

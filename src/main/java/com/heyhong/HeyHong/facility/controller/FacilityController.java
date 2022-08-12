@@ -3,6 +3,8 @@ package com.heyhong.HeyHong.facility.controller;
 
 import com.heyhong.HeyHong.config.response.BaseResponse;
 import com.heyhong.HeyHong.config.response.BaseResponseStatus;
+import com.heyhong.HeyHong.facility.dto.FaciltyCategoryGroupDto;
+import com.heyhong.HeyHong.facility.service.FacilityService;
 import com.heyhong.HeyHong.users.dto.SignInRes;
 import com.heyhong.HeyHong.users.dto.UpdateAccessTokenRes;
 import com.heyhong.HeyHong.users.entity.Users;
@@ -15,18 +17,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/app/facility")
 public class FacilityController {
 
+    private final FacilityService facilityService;
+
     @ResponseBody
-    @GetMapping("/test")
+    @GetMapping("/category")
     public ResponseEntity<BaseResponse> test(@AuthenticationPrincipal Users user){
         System.out.println("------controller------");
         System.out.println(user.getUserId());
 
-        BaseResponse res = new BaseResponse(BaseResponseStatus.OK, new UpdateAccessTokenRes("sd", 1L));
-        return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        try {
+            List<FaciltyCategoryGroupDto> result = facilityService.getFacilityCategory();
+
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, result);
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+
+
     }
 }
