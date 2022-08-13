@@ -56,7 +56,7 @@ public class UserService {
      * @return Long - 회원 id(pk)
      * @throws IllegalArgumentException
      */
-    public Long signIn(String userId, String password, String nickname, String studentId, String email, Long collegePk, Long departmentPk) throws Exception{
+    public Long signIn(String userId, String password, String nickname, String email, Long collegePk, Long departmentPk) throws Exception{
 
         // 이메일 인증 여부 확인
         ConfirmationToken cToken = confirmationTokenRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("해당 이메일 인증 토큰이 존재하지 않습니다"));
@@ -72,7 +72,6 @@ public class UserService {
                 .userId(userId)
                 .password(passwordEncode(password))
                 .nickname(nickname)
-                .studentId(studentId)
                 .email(email)
                 .college(college)
                 .department(department)

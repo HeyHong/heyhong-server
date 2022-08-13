@@ -2,6 +2,7 @@ package com.heyhong.HeyHong.users.entity;
 
 import com.heyhong.HeyHong.building.entity.RoomComment;
 import com.heyhong.HeyHong.config.auditing.BaseAuditingEntity;
+import com.heyhong.HeyHong.facility.entity.FacilityComment;
 import com.heyhong.HeyHong.hongik.entity.College;
 import com.heyhong.HeyHong.hongik.entity.Department;
 import com.heyhong.HeyHong.notice.entity.DepartmentNoticeComment;
@@ -59,6 +60,10 @@ public class Users extends BaseAuditingEntity implements UserDetails {
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<RoomComment> roomComments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<FacilityComment> facilityComments = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

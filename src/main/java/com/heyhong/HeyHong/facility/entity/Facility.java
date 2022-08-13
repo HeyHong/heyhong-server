@@ -36,6 +36,10 @@ public class Facility extends BaseAuditingEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Facility> facilities = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "facility")
+    private List<FacilityComment> facilityComments = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id")
     private Floor floor;

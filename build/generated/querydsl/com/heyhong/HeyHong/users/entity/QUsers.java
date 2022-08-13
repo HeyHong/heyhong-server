@@ -35,6 +35,8 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final StringPath email = createString("email");
 
+    public final ListPath<com.heyhong.HeyHong.facility.entity.FacilityComment, com.heyhong.HeyHong.facility.entity.QFacilityComment> facilityComments = this.<com.heyhong.HeyHong.facility.entity.FacilityComment, com.heyhong.HeyHong.facility.entity.QFacilityComment>createList("facilityComments", com.heyhong.HeyHong.facility.entity.FacilityComment.class, com.heyhong.HeyHong.facility.entity.QFacilityComment.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath nickname = createString("nickname");

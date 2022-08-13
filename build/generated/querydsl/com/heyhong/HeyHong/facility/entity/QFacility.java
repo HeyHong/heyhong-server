@@ -33,6 +33,8 @@ public class QFacility extends EntityPathBase<Facility> {
 
     public final QFacilityCategory facilityCategory;
 
+    public final ListPath<FacilityComment, QFacilityComment> facilityComments = this.<FacilityComment, QFacilityComment>createList("facilityComments", FacilityComment.class, QFacilityComment.class, PathInits.DIRECT2);
+
     public final com.heyhong.HeyHong.building.entity.QFloor floor;
 
     public final StringPath homepage1_name = createString("homepage1_name");

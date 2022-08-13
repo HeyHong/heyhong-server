@@ -12,7 +12,6 @@ public class SignInReq {
     private String userId;
     private String password;
     private String nickname;
-    private String studentId;
     private String email;
     private Long collegePk;
     private Long departmentPk;
