@@ -57,4 +57,19 @@ public class FacilityComment extends BaseAuditingEntity {
     public enum AnonymousStatus{
         INACTIVE, ACTIVE
     }
+
+    public FacilityComment(Facility facility, Users user, String contents){
+        this.facility = facility;
+        this.user = user;
+        this.contents = contents;
+        this.status = Status.ACTIVE;
+    }
+
+    public FacilityComment(Facility facility, Users user, String contents, FacilityComment parent){
+        this.facility = facility;
+        this.user = user;
+        this.contents = contents;
+        this.parent = parent;
+        this.status = Status.ACTIVE;
+    }
 }

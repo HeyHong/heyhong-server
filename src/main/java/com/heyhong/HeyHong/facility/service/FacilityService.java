@@ -6,8 +6,11 @@ import com.heyhong.HeyHong.facility.dto.FacilityListItemDto;
 import com.heyhong.HeyHong.facility.dto.FaciltyCategoryGroupDto;
 import com.heyhong.HeyHong.facility.entity.Facility;
 import com.heyhong.HeyHong.facility.entity.FacilityCategory;
+import com.heyhong.HeyHong.facility.entity.FacilityComment;
 import com.heyhong.HeyHong.facility.repository.FacilityCategoryRepository;
+import com.heyhong.HeyHong.facility.repository.FacilityCommentRepository;
 import com.heyhong.HeyHong.facility.repository.FacilityRepository;
+import com.heyhong.HeyHong.users.entity.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class FacilityService {
 
     private final FacilityCategoryRepository facilityCategoryRepository;
     private final FacilityRepository facilityRepository;
+    private final FacilityCommentRepository facilityCommentRepository;
 
     /**
      * facility 카테고리 가져오기
@@ -90,12 +95,12 @@ public class FacilityService {
         List<FacilityListItemDto> result = new ArrayList<>();
 
         if(commentCounts.isEmpty()){
-            System.out.println("-----comment 없음======");
+            // comment가 없는 경우
             for(Facility f : facilities){
                 result.add(new FacilityListItemDto(f));
             }
         }else{
-            System.out.println("------있음======");
+            // comment가 있는 경우
             int ci = 0;
             int maxCi = commentCounts.size();
             for(Facility f : facilities){
@@ -111,6 +116,31 @@ public class FacilityService {
 
 
         return result;
+    }
+
+
+    /**
+     * 시설 댓글/대댓글 달기
+     * @param facilityPk
+     * @param contents
+     * @param user
+     */
+    public void createFacilityComment(Long facilityPk, String contents, Users user, Long replyCommentPk){
+
+        Facility facility = facilityRepository.findById(facilityPk).orElseThrow(()->new NoSuchElementException("해당 시설이 존재하지 않습니다"));
+        FacilityComment facilityComment = null;
+        if(replyCommentPk != null){
+            // 댓글의 종류가 대댓글인 경우
+            FacilityComment replyFacilityComment =  facilityCommentRepository.findById(replyCommentPk)
+                    .orElseThrow(()-> new NoSuchElementException("해당 대댓글 대상 댓글이 존재하지 않습니다. replyCommentPk를 확인해주세요."));
+            facilityComment = new FacilityComment(facility, user, contents, replyFacilityComment);
+        }else{
+            // 댓글의 종류가 최초 댓글인 경우
+            facilityComment = new FacilityComment(facility, user, contents);
+        }
+
+        facilityCommentRepository.save(facilityComment);
+
     }
 
 

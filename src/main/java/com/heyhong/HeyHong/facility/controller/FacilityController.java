@@ -3,6 +3,7 @@ package com.heyhong.HeyHong.facility.controller;
 
 import com.heyhong.HeyHong.config.response.BaseResponse;
 import com.heyhong.HeyHong.config.response.BaseResponseStatus;
+import com.heyhong.HeyHong.facility.dto.CreateFacilityCommentReq;
 import com.heyhong.HeyHong.facility.dto.FacilityListItemDto;
 import com.heyhong.HeyHong.facility.dto.FaciltyCategoryGroupDto;
 import com.heyhong.HeyHong.facility.service.FacilityService;
@@ -61,5 +62,20 @@ public class FacilityController {
             BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
         }
+    }
+
+    @ResponseBody
+    @PostMapping("/comment")
+    public ResponseEntity<BaseResponse> createFacilityComment(@AuthenticationPrincipal Users user, @RequestBody CreateFacilityCommentReq createFacilityCommentReq){
+
+        try{
+            facilityService.createFacilityComment(createFacilityCommentReq.getFacilityPk(), createFacilityCommentReq.getContents(), user, createFacilityCommentReq.getReplyCommentPk());
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK);
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }
+
     }
 }
