@@ -34,13 +34,13 @@ public class BaseResponse<T> {
     Exception인 경우
      */
     public BaseResponse(BaseResponseStatus status){
-        this.isSuccess = false;
+        this.isSuccess = status.isSuccess();
         this.code = status.getCode().value();
         this.message = status.getMessage();
     }
 
     public BaseResponse(BaseResponseStatus status, String message){
-        this.isSuccess = false;
+        this.isSuccess = status.isSuccess();
         this.code = status.getCode().value();
         this.message = message;
     }

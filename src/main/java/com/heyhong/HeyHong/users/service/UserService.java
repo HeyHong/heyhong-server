@@ -194,7 +194,7 @@ public class UserService {
 
         Optional<ConfirmationToken> token = confirmationTokenRepository.findByIdAndStatus(confirmPk, 1);
         if(!token.isPresent()){
-            throw new NoSuchElementException("해당 토큰이 존재하지 않습니다");
+            throw new NoSuchElementException("해당 인증 토큰이 존재하지 않습니다. confirmPk를 확인해주세요.");
         }
 
         if(!token.get().getEmail().equals(email)){

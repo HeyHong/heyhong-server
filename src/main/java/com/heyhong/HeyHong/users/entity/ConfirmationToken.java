@@ -18,6 +18,7 @@ import java.util.Random;
 @Builder
 public class ConfirmationToken extends BaseAuditingEntity {
 
+    // 이메일 인증 토큰 유효시간 - 5분
     private static final long TOKEN_EXPIRATION_TIME_VALUE = 5L;
 
     @Id
