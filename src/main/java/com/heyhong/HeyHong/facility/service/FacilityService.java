@@ -1,24 +1,22 @@
 package com.heyhong.HeyHong.facility.service;
 
-import com.heyhong.HeyHong.facility.dto.FacilityCategoryDto;
-import com.heyhong.HeyHong.facility.dto.FacilityCommentCountDto;
-import com.heyhong.HeyHong.facility.dto.FacilityListItemDto;
-import com.heyhong.HeyHong.facility.dto.FaciltyCategoryGroupDto;
+import com.heyhong.HeyHong.facility.dto.*;
 import com.heyhong.HeyHong.facility.entity.Facility;
 import com.heyhong.HeyHong.facility.entity.FacilityCategory;
 import com.heyhong.HeyHong.facility.entity.FacilityComment;
+import com.heyhong.HeyHong.facility.entity.FacilityImage;
 import com.heyhong.HeyHong.facility.repository.FacilityCategoryRepository;
 import com.heyhong.HeyHong.facility.repository.FacilityCommentRepository;
+import com.heyhong.HeyHong.facility.repository.FacilityImageRepository;
 import com.heyhong.HeyHong.facility.repository.FacilityRepository;
 import com.heyhong.HeyHong.users.entity.Users;
+import com.heyhong.HeyHong.users.service.LikeService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +25,8 @@ public class FacilityService {
     private final FacilityCategoryRepository facilityCategoryRepository;
     private final FacilityRepository facilityRepository;
     private final FacilityCommentRepository facilityCommentRepository;
+    private final FacilityImageRepository facilityImageRepository;
+    private final LikeService likeService;
 
     /**
      * facility 카테고리 가져오기
@@ -141,6 +141,71 @@ public class FacilityService {
 
         facilityCommentRepository.save(facilityComment);
 
+    }
+
+
+    /**
+     * facility 상세 정보 조회
+     * @param facilityPk
+     * @return
+     */
+    public FacilityDetailRes readFacilityDetail(Long facilityPk, Users user){
+
+        Facility facility = facilityRepository.findByIdAndStatus(facilityPk, Facility.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 시설이 존재하지 않습니다. pk를 다시 한번 확인해주세요"));
+
+        FacilityDetailRes result;
+        //facility 기반으로 FacilityDetailRes 생성
+        if(facility.getFloor() == null) {
+            System.out.println("없음");
+            result = new FacilityDetailRes(facility);
+        }else{
+            System.out.println("있음");
+            Long floorPk = facility.getFloor().getId();
+            result = new FacilityDetailRes(facility, floorPk);
+        }
+
+
+        //facility entity에 해당하는 이미지 가져오기 및 FacilityDetailRes에 set
+        result.setImages(getFacilityImages(facility));
+
+        //시설 찜하기 여부
+        result.setLikeStatus(likeService.checkFacilityLike(user, facility));
+
+        //하위 시설을 가진 경우 ) 카테고리가 행정 기관 (facility_id = 12)
+//        if(facility.getFacilityCategory().getId() == 12){
+//            //하위 부속 기관 list
+//            List<Facility> subFacilities = facilityRepository.findByParent(facility);
+//            //반환할 FacilityDetailRes DTO
+//            List<FacilityDetailRes> subFacilityDetailRes = new ArrayList<>();
+//            for(Facility sf : subFacilities){
+//                //부속기관 entitiy를 활용하여 FacilityDetailRes 생성
+//                FacilityDetailRes facilityDetailRes = new FacilityDetailRes(sf);
+//                //부속기관 entity에 해당하는 이미지 가져오기 및 FacilityDetailRes에 set
+//                facilityDetailRes.setImages(this.getFacilityImages(sf));
+//                subFacilityDetailRes.add(facilityDetailRes);
+//            }
+//
+//            result.setSubFacilities(subFacilityDetailRes);
+//        }
+
+        return result;
+
+
+    }
+
+
+    /**
+     * 시설 이미지 가져오기 - private
+     * @param facility
+     * @return
+     */
+    private List<String> getFacilityImages(Facility facility){
+        List<FacilityImage> facilityImages = facilityImageRepository.findByFacilityAndStatus(facility, FacilityImage.Status.ACTIVE);
+        List<String> result = new ArrayList<>();
+        for(FacilityImage fm : facilityImages){
+            result.add(fm.getImageUrl());
+        }
+        return result;
     }
 
 

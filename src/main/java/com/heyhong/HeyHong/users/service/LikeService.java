@@ -1,10 +1,13 @@
 package com.heyhong.HeyHong.users.service;
 
+import com.heyhong.HeyHong.facility.entity.Facility;
 import com.heyhong.HeyHong.facility.entity.FacilityCategory;
 import com.heyhong.HeyHong.facility.repository.FacilityCategoryRepository;
+import com.heyhong.HeyHong.users.entity.LikeFacility;
 import com.heyhong.HeyHong.users.entity.LikeFacilityCategory;
 import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.repository.LikeFacilityCategoryRepository;
+import com.heyhong.HeyHong.users.repository.LikeFacilityRepository;
 import com.heyhong.HeyHong.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class LikeService {
     private final UsersRepository usersRepository;
     private final LikeFacilityCategoryRepository likeFacilityCategoryRepository;
     private final FacilityCategoryRepository facilityCategoryRepository;
+    private final LikeFacilityRepository likeFacilityRepository;
 
     /**
      * 시설 카테고리 좋아요 service
@@ -38,5 +42,15 @@ public class LikeService {
         }
         LikeFacilityCategory likeFacilityCategory = new LikeFacilityCategory(user, facilityCategory);
         likeFacilityCategoryRepository.save(likeFacilityCategory);
+    }
+
+    /**
+     * 시설 찜하기 여부 체크
+     * @param users
+     * @param facility
+     * @return
+     */
+    public boolean checkFacilityLike(Users users, Facility facility){
+        return likeFacilityRepository.existsByUserAndFacilityAndStatus(users, facility, LikeFacility.Status.ACTIVE);
     }
 }

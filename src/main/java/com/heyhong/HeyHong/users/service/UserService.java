@@ -44,17 +44,15 @@ public class UserService {
     }
 
     /**
-     * 회원가입
-     * College, Department find / pw encode / 회원 생성
+     * 회원가입 최종 제출
      * @param userId
      * @param password
      * @param nickname
-     * @param studentId
      * @param email
      * @param collegePk
      * @param departmentPk
-     * @return Long - 회원 id(pk)
-     * @throws IllegalArgumentException
+     * @return
+     * @throws Exception
      */
     public Long signIn(String userId, String password, String nickname, String email, Long collegePk, Long departmentPk) throws Exception{
 
@@ -74,7 +72,7 @@ public class UserService {
                 .nickname(nickname)
                 .email(email)
                 .college(college)
-                .department(department)
+                .department(department).status(Users.Status.ACTIVE)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
     }
@@ -150,7 +148,7 @@ public class UserService {
      * @return
      */
     @Transactional
-    public Long createEmailConfirmation(String email){
+    public Long createEmailConfirmationForSignUp(String email){
 
         if(!checkHongikEmailFormat(email)){
             throw new IllegalArgumentException("학우의 이메일이 아닙니다");
@@ -169,8 +167,8 @@ public class UserService {
         try{
 
             String subject = "[헤이홍] 회원가입 인증";
-            String text = "안녕하세요 학우님! 헤이홍 회원가입을 환영합니다 <br/>" +
-                    " 회원가입을 위한 인증번호 : <b> " + confirmationToken.getConfirmKey() + "</b><br/> 어플로 돌아가서 인증번호 입력 후, 홍대생 인증이 되면 빠르게 회원가입 진행해드리겠습니다!";
+            String text = "안녕하세요 학우님! 헤이홍 회원가입을 환영합니다 \n" +
+                    " 회원가입을 위한 인증번호 : \n" + confirmationToken.getConfirmKey() + "\n어플로 돌아가서 인증번호 입력 후, 홍대생 인증이 되면 빠르게 회원가입 진행해드리겠습니다!";
 
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(email);
@@ -216,6 +214,54 @@ public class UserService {
             return false;
         }
 
+
+    }
+
+    /**
+     * id 찾기 - 이메일
+     * @param email
+     * @return
+     */
+    public boolean findLostId(String email){
+
+        if(!checkHongikEmailFormat(email)){
+            throw new IllegalArgumentException("학교의 이메일 형식이 아닙니다");
+        }
+
+        Optional<Users> user = usersRepository.findByEmailAndStatus(email, Users.Status.ACTIVE);
+        if(user.isPresent()){
+            try{
+                createEmailConfirmationForFindId(email, user.get().getUserId());
+            }catch (Exception e){
+                throw e;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+    private void createEmailConfirmationForFindId(String email, String userId){
+
+         int userIdLen = userId.length();
+         String convertedUserId = userId.substring(0, userIdLen-3) + "***";
+
+        try{
+            String subject = "[헤이홍] 아이디 찾기";
+            String text = "안녕하세요 학우님! 학우님의 헤이홍 아이디는  \n" +
+                     convertedUserId + "입니다. \n 어플로 돌아가서 로그인해주세요!";
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(email);
+            mailMessage.setSubject(subject);
+            mailMessage.setText(text);
+            emailService.sendEmail(mailMessage);
+
+        }catch (Exception e){
+            throw e;
+        }
 
     }
 

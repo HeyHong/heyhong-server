@@ -1,6 +1,5 @@
 package com.heyhong.HeyHong.users.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.heyhong.HeyHong.config.response.BaseResponse;
 import com.heyhong.HeyHong.config.response.BaseResponseStatus;
 import com.heyhong.HeyHong.users.dto.*;
@@ -93,7 +92,7 @@ public class UsersController {
     public ResponseEntity<BaseResponse> sendConfirmEmail(@RequestBody SendConfirmEmailReq req){
 
         try{
-            Long confirmationTokenPk = userService.createEmailConfirmation(req.getEmail());
+            Long confirmationTokenPk = userService.createEmailConfirmationForSignUp(req.getEmail());
 
             BaseResponse res = new BaseResponse(BaseResponseStatus.OK, new SendConfirmEmailRes(confirmationTokenPk));
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
@@ -160,6 +159,30 @@ public class UsersController {
         }
 
 
+    }
+
+
+    @ResponseBody
+    @PostMapping("/find/id")
+    public ResponseEntity<BaseResponse> findUserId(@RequestBody FindUserIdReq req){
+
+        try{
+            if(userService.findLostId(req.getEmail())){
+                BaseResponse res = new BaseResponse(BaseResponseStatus.OK, "이메일 전송 완료하였습니다.");
+                return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
+            }else{
+                BaseResponse res = new BaseResponse(BaseResponseStatus.UNAUTHORIZED, "가입되지 않은 이메일입니다");
+                return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.UNAUTHORIZED.getCode());
+            }
+
+
+        }catch (IllegalArgumentException e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
     }
 
 

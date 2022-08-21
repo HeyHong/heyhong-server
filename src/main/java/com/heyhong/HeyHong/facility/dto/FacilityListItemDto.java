@@ -24,7 +24,7 @@ public class FacilityListItemDto {
         this.name = f.getName();
         this.location = f.getLocation();
         this.description = f.getDescription();
-        this.imageUrl = f.getImage_url();
+        this.imageUrl = f.getThumbnail_image_url();
         this.commentCount = 0;
     }
 
@@ -33,7 +33,7 @@ public class FacilityListItemDto {
         this.name = f.getName();
         this.location = f.getLocation();
         this.description = f.getDescription();
-        this.imageUrl = f.getImage_url();
+        this.imageUrl = f.getThumbnail_image_url();
         this.commentCount = count.intValue();
     }
 

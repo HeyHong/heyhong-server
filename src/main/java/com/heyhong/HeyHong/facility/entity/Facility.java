@@ -33,6 +33,10 @@ public class Facility extends BaseAuditingEntity {
     private Facility parent;
 
     @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="facility")
+    private List<FacilityImage> facilityImages = new ArrayList<>();
+
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Facility> facilities = new ArrayList<>();
 
@@ -54,8 +58,8 @@ public class Facility extends BaseAuditingEntity {
     @Column(name = "location", length = 10, nullable = true)
     private String location;
 
-    @Column(name = "image_url", columnDefinition = "TEXT")
-    private String image_url;
+    @Column(name = "thumbnail_image_url", columnDefinition = "TEXT")
+    private String thumbnail_image_url;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;

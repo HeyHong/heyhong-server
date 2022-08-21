@@ -35,6 +35,8 @@ public class QFacility extends EntityPathBase<Facility> {
 
     public final ListPath<FacilityComment, QFacilityComment> facilityComments = this.<FacilityComment, QFacilityComment>createList("facilityComments", FacilityComment.class, QFacilityComment.class, PathInits.DIRECT2);
 
+    public final ListPath<FacilityImage, QFacilityImage> facilityImages = this.<FacilityImage, QFacilityImage>createList("facilityImages", FacilityImage.class, QFacilityImage.class, PathInits.DIRECT2);
+
     public final com.heyhong.HeyHong.building.entity.QFloor floor;
 
     public final StringPath homepage1_name = createString("homepage1_name");
@@ -50,8 +52,6 @@ public class QFacility extends EntityPathBase<Facility> {
     public final StringPath homepage3_url = createString("homepage3_url");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final StringPath image_url = createString("image_url");
 
     public final StringPath location = createString("location");
 
@@ -74,6 +74,8 @@ public class QFacility extends EntityPathBase<Facility> {
     public final StringPath telephone3 = createString("telephone3");
 
     public final StringPath telephone3_name = createString("telephone3_name");
+
+    public final StringPath thumbnail_image_url = createString("thumbnail_image_url");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateAt = _super.updateAt;
