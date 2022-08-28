@@ -3,10 +3,7 @@ package com.heyhong.HeyHong.facility.controller;
 
 import com.heyhong.HeyHong.config.response.BaseResponse;
 import com.heyhong.HeyHong.config.response.BaseResponseStatus;
-import com.heyhong.HeyHong.facility.dto.CreateFacilityCommentReq;
-import com.heyhong.HeyHong.facility.dto.FacilityDetailRes;
-import com.heyhong.HeyHong.facility.dto.FacilityListItemDto;
-import com.heyhong.HeyHong.facility.dto.FaciltyCategoryGroupDto;
+import com.heyhong.HeyHong.facility.dto.*;
 import com.heyhong.HeyHong.facility.service.FacilityService;
 import com.heyhong.HeyHong.users.dto.SignInRes;
 import com.heyhong.HeyHong.users.dto.UpdateAccessTokenRes;
@@ -117,6 +114,85 @@ public class FacilityController {
         }catch (Exception e){
             BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }
+
+    }
+
+
+    /**
+     * 시설 댓글 조회 Controller
+     * @param user
+     * @param facilityPk
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/comment/{facilityPk}")
+    public ResponseEntity<BaseResponse> readFacilityComment(@AuthenticationPrincipal Users user, @PathVariable Long facilityPk){
+
+        try{
+            List<FacilityCommentDto> result = facilityService.readFacilityComments(user, facilityPk);
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, result);
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
+
+        }catch (NoSuchElementException e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            e.printStackTrace();
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
+
+    /**
+     * 시설 댓글 수정 Controller
+     * @param facilityCommentPk
+     * @param req
+     * @return
+     */
+    @ResponseBody
+    @PatchMapping("/comment/{facilityCommentPk}")
+    public ResponseEntity<BaseResponse> updateFacilityComment(@PathVariable Long facilityCommentPk, @RequestBody UpdateFacilityCommentReq req){
+
+        try{
+            facilityService.updateFacilityComment(facilityCommentPk, req.getContents());
+
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK);
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            e.printStackTrace();
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
+
+
+    /**
+     * 시설 댓글 삭제 Controller
+     * @param facilityCommentPk
+     * @return
+     */
+    @ResponseBody
+    @DeleteMapping("/comment/{facilityCommentPk}")
+    public ResponseEntity<BaseResponse> deleteFacilityComment(@PathVariable Long facilityCommentPk){
+
+        try{
+            facilityService.deleteFacilityComment(facilityCommentPk);
+
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK);
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            e.printStackTrace();
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
         }
 
     }

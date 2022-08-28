@@ -63,6 +63,7 @@ public class FacilityComment extends BaseAuditingEntity {
         this.user = user;
         this.contents = contents;
         this.status = Status.ACTIVE;
+        this.anonymous = AnonymousStatus.INACTIVE;
     }
 
     public FacilityComment(Facility facility, Users user, String contents, FacilityComment parent){
@@ -71,5 +72,14 @@ public class FacilityComment extends BaseAuditingEntity {
         this.contents = contents;
         this.parent = parent;
         this.status = Status.ACTIVE;
+        this.anonymous = AnonymousStatus.INACTIVE;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 }

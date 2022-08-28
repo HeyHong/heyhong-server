@@ -143,7 +143,7 @@ public class UserService {
 
 
     /**
-     * 인증메일 전송
+     * 회원가입 인증메일 전송
      * @param email
      * @return
      */
@@ -186,28 +186,32 @@ public class UserService {
     }
 
 
-
+    /**
+     * 회원가입 인증 메일 번호 확인
+     * @param confirmPk
+     * @param email
+     * @param confirmCode
+     * @return
+     */
     @Transactional
     public boolean checkConfirmEmail(Long confirmPk, String email, String confirmCode){
 
-        Optional<ConfirmationToken> token = confirmationTokenRepository.findByIdAndStatus(confirmPk, 1);
-        if(!token.isPresent()){
-            throw new NoSuchElementException("해당 인증 토큰이 존재하지 않습니다. confirmPk를 확인해주세요.");
-        }
+        ConfirmationToken token = confirmationTokenRepository.findByIdAndStatus(confirmPk, ConfirmationToken.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 인증 토큰이 존재하지 않습니다. confirmPk를 확인해주세요."));
 
-        if(!token.get().getEmail().equals(email)){
+
+        if(!token.getEmail().equals(email)){
             throw new IllegalArgumentException("이메일이 일치하지 않습니다");
         }
 
         //인증 유효시간 체크
-        if(!token.get().checkTokenStatus()){
-            confirmationTokenRepository.save(token.get());
+        if(!token.checkTokenStatus()){
+            confirmationTokenRepository.save(token);
             throw new IllegalArgumentException("인증 유효시간이 만료되었습니다.");
         }
 
-        if(token.get().getConfirmKey().equals(confirmCode)){
-            token.get().useToken();
-            confirmationTokenRepository.save(token.get());
+        if(token.getConfirmKey().equals(confirmCode)){
+            token.useToken();
+            confirmationTokenRepository.save(token);
             return true;
         }
         else{
