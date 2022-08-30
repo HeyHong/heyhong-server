@@ -196,12 +196,13 @@ public class UserService {
     @Transactional
     public boolean checkConfirmEmail(Long confirmPk, String email, String confirmCode){
 
-        ConfirmationToken token = confirmationTokenRepository.findByIdAndStatus(confirmPk, ConfirmationToken.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 인증 토큰이 존재하지 않습니다. confirmPk를 확인해주세요."));
+//        ConfirmationToken token = confirmationTokenRepository.findByIdAndStatus(confirmPk, ConfirmationToken.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 인증 토큰이 존재하지 않습니다. confirmPk를 확인해주세요."));
+        ConfirmationToken token = confirmationTokenRepository.findByIdAndEmailAndStatus(confirmPk, email, ConfirmationToken.Status.ACTIVE)
+                .orElseThrow(()-> new NoSuchElementException("해당 인증 토큰이 존재하지 않습니다. confirmPk 혹은 email을 확인해주세요"));
 
-
-        if(!token.getEmail().equals(email)){
-            throw new IllegalArgumentException("이메일이 일치하지 않습니다");
-        }
+//        if(!token.getEmail().equals(email)){
+//            throw new IllegalArgumentException("이메일이 일치하지 않습니다");
+//        }
 
         //인증 유효시간 체크
         if(!token.checkTokenStatus()){
