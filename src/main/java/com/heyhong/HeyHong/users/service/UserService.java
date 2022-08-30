@@ -6,6 +6,7 @@ import com.heyhong.HeyHong.hongik.repository.CollegeRepository;
 import com.heyhong.HeyHong.hongik.repository.DepartmentRepository;
 import com.heyhong.HeyHong.users.dto.CheckConfirmEmailReq;
 import com.heyhong.HeyHong.users.dto.CollegeDeptDto;
+import com.heyhong.HeyHong.users.dto.SignInReq;
 import com.heyhong.HeyHong.users.entity.ConfirmationToken;
 import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.jwt.JwtTokenProvider;
@@ -45,32 +46,28 @@ public class UserService {
 
     /**
      * 회원가입 최종 제출
-     * @param userId
-     * @param password
-     * @param nickname
-     * @param email
-     * @param collegePk
-     * @param departmentPk
+     * @param signInReq
      * @return
      * @throws Exception
      */
-    public Long signIn(String userId, String password, String nickname, String email, Long collegePk, Long departmentPk) throws Exception{
+    public Long signIn(SignInReq signInReq) throws Exception{
 
         // 이메일 인증 여부 확인
-        ConfirmationToken cToken = confirmationTokenRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("해당 이메일 인증 토큰이 존재하지 않습니다"));
+        ConfirmationToken cToken = confirmationTokenRepository.findByIdAndEmail(signInReq.getConfirmPk(), signInReq.getEmail()).orElseThrow(() -> new NoSuchElementException("해당 이메일 인증 토큰이 존재하지 않거나 인증되지 않은 이메일입니다."));
         if(cToken.getStatus() != ConfirmationToken.Status.SUCCESS){
             throw new Exception("이메일 인증이 완료되지 않은 계정입니다.");
         }
 
+        System.out.println("인증 토큰 가져오기 성공");
         // 학부, 학과 fetch
-        College college = collegeRepository.findById(collegePk).orElseThrow(()->new NoSuchElementException("해당 대학이 존재하지 않습니다. client validation 확인"));
-        Department department = departmentRepository.findById(departmentPk).orElseThrow(()-> new NoSuchElementException("해당 과가 존재하지 않습니다. client validation 확인"));
+        College college = collegeRepository.findById(signInReq.getCollegePk()).orElseThrow(()->new NoSuchElementException("해당 대학이 존재하지 않습니다. client validation 확인"));
+        Department department = departmentRepository.findById(signInReq.getDepartmentPk()).orElseThrow(()-> new NoSuchElementException("해당 과가 존재하지 않습니다. client validation 확인"));
         
         return this.save(Users.builder()
-                .userId(userId)
-                .password(passwordEncode(password))
-                .nickname(nickname)
-                .email(email)
+                .userId(signInReq.getUserId())
+                .password(passwordEncode(signInReq.getPassword()))
+                .nickname(signInReq.getNickname())
+                .email(signInReq.getEmail())
                 .college(college)
                 .department(department).status(Users.Status.ACTIVE)
                 .roles(Collections.singletonList("ROLE_USER"))

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Setter
 @AllArgsConstructor
 public class SignInReq {
+    private Long confirmPk;
     private String userId;
     private String password;
     private String nickname;

@@ -33,7 +33,7 @@ public class UsersController {
     public ResponseEntity<BaseResponse> signIn(@RequestBody SignInReq req){
         System.out.println("here");
         try{
-            Long userPk = userService.signIn(req.getUserId(), req.getPassword(), req.getNickname(), req.getEmail(), req.getCollegePk(), req.getDepartmentPk());
+            Long userPk = userService.signIn(req);
 //            return new BaseResponse<>(BaseResponseStatus.OK, new SignInRes(userPk, userService.login(req.getUserId(), req.getPassword())));
             LoginReq tmpLoginReq = new LoginReq(req.getUserId(), req.getPassword());
             BaseResponse res = new BaseResponse(BaseResponseStatus.OK, new SignInRes(userPk, authService.login(tmpLoginReq)) );
