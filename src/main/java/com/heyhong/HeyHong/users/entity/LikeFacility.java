@@ -40,5 +40,11 @@ public class LikeFacility extends BaseAuditingEntity {
         INACTIVE, ACTIVE
     }
 
+    public LikeFacility(Users user, Facility facility){
+        this.user = user;
+        this.facility = facility;
+        this.status = Status.ACTIVE;
+    }
+
 
 }

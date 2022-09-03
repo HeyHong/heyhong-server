@@ -41,4 +41,8 @@ public class LikeFacilityCategory extends BaseAuditingEntity {
         this.facilityCategory = facilityCategory;
         this.status = Status.ACTIVE;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }
