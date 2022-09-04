@@ -20,26 +20,95 @@ public class MemberController {
     private final LikeService likeService;
 
     /**
-     * 시설 카테고리 좋아요
+     * 시설 카테고리 즐겨찾기
      * @param user
-     * @param likeFacilityCategoryReq
+     * @param facilityCategoryPk
      * @return
      */
     @ResponseBody
-    @PostMapping("/like/facility-category")
-    public ResponseEntity<BaseResponse> likeFacilityCategory(@AuthenticationPrincipal Users user, @RequestBody LikeFacilityCategoryReq likeFacilityCategoryReq){
+    @PostMapping("/like/facility-category/{facilityCategoryPk}")
+    public ResponseEntity<BaseResponse> likeFacilityCategory(@AuthenticationPrincipal Users user, @PathVariable Long facilityCategoryPk){
 
         try{
-            likeService.likeFacilityCategory(user.getId(), likeFacilityCategoryReq.getFacilityCategoryPk());
+            likeService.likeFacilityCategory(user, facilityCategoryPk);
             BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
             return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
         }catch (NoSuchElementException e){
-            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, "존재하지 않는 시설 카테고리 입니다.");
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
         }catch (Exception e){
-            BaseResponse res = new BaseResponse(BaseResponseStatus.DUPLICATE_ERROR, e.getMessage());
-            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.DUPLICATE_ERROR.getCode());
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
         }
 
+    }
+
+    /**
+     * 시설 카테고리 즐겨찾기 취소
+     * @param user
+     * @param facilityCategoryPk
+     * @return
+     */
+    @ResponseBody
+    @DeleteMapping("/like/facility-category/{facilityCategoryPk}")
+    public ResponseEntity<BaseResponse> unlikeFacilityCategory(@AuthenticationPrincipal Users user, @PathVariable Long facilityCategoryPk){
+        try{
+            likeService.unlikeFacilityCategory(user, facilityCategoryPk);
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (NoSuchElementException e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
+
+    /**
+     * 시설 즐겨찾기
+     * @param user
+     * @param facilityPk
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/like/facility/{facilityPk}")
+    public ResponseEntity<BaseResponse> likeFacility(@AuthenticationPrincipal Users user, @PathVariable Long facilityPk){
+
+        try{
+            likeService.likeFacility(user, facilityPk);
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (NoSuchElementException e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+
+    }
+
+
+    /**
+     * 시설 즐겨찾기 취소
+     * @param user
+     * @param facilityPk
+     * @return
+     */
+    @ResponseBody
+    @DeleteMapping("/like/facility/{facilityPk}")
+    public ResponseEntity<BaseResponse> unlikeFacility(@AuthenticationPrincipal Users user, @PathVariable Long facilityPk){
+        try{
+            likeService.unlikeFacility(user, facilityPk);
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (NoSuchElementException e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
     }
 }

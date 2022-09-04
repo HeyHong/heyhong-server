@@ -33,6 +33,8 @@ public class QFacilityCategory extends EntityPathBase<FacilityCategory> {
 
     public final StringPath imageUrl = createString("imageUrl");
 
+    public final ListPath<com.heyhong.HeyHong.users.entity.LikeFacilityCategory, com.heyhong.HeyHong.users.entity.QLikeFacilityCategory> likeFacilityCategories = this.<com.heyhong.HeyHong.users.entity.LikeFacilityCategory, com.heyhong.HeyHong.users.entity.QLikeFacilityCategory>createList("likeFacilityCategories", com.heyhong.HeyHong.users.entity.LikeFacilityCategory.class, com.heyhong.HeyHong.users.entity.QLikeFacilityCategory.class, PathInits.DIRECT2);
+
     public final StringPath name = createString("name");
 
     public final EnumPath<FacilityCategory.Status> status = createEnum("status", FacilityCategory.Status.class);

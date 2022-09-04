@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @RestController
@@ -162,6 +163,11 @@ public class UsersController {
     }
 
 
+    /**
+     * 아이디 찾기
+     * @param req
+     * @return
+     */
     @ResponseBody
     @PostMapping("/find/id")
     public ResponseEntity<BaseResponse> findUserId(@RequestBody FindUserIdReq req){
@@ -177,6 +183,24 @@ public class UsersController {
 
 
         }catch (IllegalArgumentException e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
+
+
+    @ResponseBody
+    @PostMapping("/find/password")
+    public ResponseEntity<BaseResponse> findUserPassword(@RequestBody FindUserPasswordReq findUserPasswordReq){
+
+        try{
+            userService.findLostPassword(findUserPasswordReq.getUserId(), findUserPasswordReq.getEmail());
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, "이메일 전송 완료하였습니다.");
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
+        }catch (NoSuchElementException e){
             BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
         }catch (Exception e){

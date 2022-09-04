@@ -36,7 +36,7 @@ public class FacilityController {
         System.out.println(user.getUserId());
 
         try {
-            List<FaciltyCategoryGroupDto> result = facilityService.getFacilityCategory();
+            List<FaciltyCategoryGroupDto> result = facilityService.getFacilityCategory(user);
 
             BaseResponse res = new BaseResponse(BaseResponseStatus.OK, result);
             return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());

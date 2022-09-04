@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 @Service
@@ -244,7 +245,62 @@ public class UserService {
     }
 
 
+    /**
+     * 비밀번호 찾기
+     * @param userId
+     * @param email
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void findLostPassword(String userId, String email) throws Exception{
+        Users user = usersRepository.findByUserIdAndEmailAndStatus(userId, email, Users.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 회원이 존재하지 않습니다. ID 혹은 email을 확인해주세요."));
 
+        String newPassword = generateRandomPassword(10);
+
+        System.out.println(newPassword);
+
+        try{
+            user.setPassword(passwordEncode(newPassword));
+            usersRepository.save(user);
+            createEmailForFindPassword(email, newPassword);
+        }catch (Exception e){
+            throw e;
+        }
+
+
+    }
+
+
+    /**
+     * 비밀번호 찾기 > 비밀번호 초기화 안내 이메일 전송
+     * @param email
+     * @param newPassword
+     */
+    private void createEmailForFindPassword(String email, String newPassword){
+
+
+        try{
+            String subject = "[헤이홍] 비밀번호 초기화";
+            String text = "안녕하세요 학우님! 학우님의 헤이홍 비밀번호는 아래로 초기화되었습니다! \n" +
+                    newPassword + " \n어플로 돌아가서 로그인 후 프로필에서 반드시 비밀번호 변경해주세요!";
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(email);
+            mailMessage.setSubject(subject);
+            mailMessage.setText(text);
+            emailService.sendEmail(mailMessage);
+
+        }catch (Exception e){
+            throw e;
+        }
+
+    }
+
+
+    /**
+     * 아이디 찾기 안내 이메일 전송
+     * @param email
+     * @param userId
+     */
     private void createEmailConfirmationForFindId(String email, String userId){
 
          int userIdLen = userId.length();
@@ -288,6 +344,28 @@ public class UserService {
         }
 
         return collegeDepts;
+    }
+
+
+    /**
+     * 랜덤 비밀번호 생성
+     * @param len 생성하고자하는 비밀번호 자릿수
+     * @return
+     */
+    private String generateRandomPassword(int len){
+        // ASCII 범위 – 영숫자(0-9, a-z, A-Z)
+        final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < len; i++)
+        {
+            int randomIndex = random.nextInt(chars.length());
+            sb.append(chars.charAt(randomIndex));
+        }
+
+        return sb.toString();
     }
 
 

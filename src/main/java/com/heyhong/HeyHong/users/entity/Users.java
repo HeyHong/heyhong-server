@@ -117,4 +117,8 @@ public class Users extends BaseAuditingEntity implements UserDetails {
         return true;
     }
 
+    public void setPassword(String password){
+        this.password = password;
+    }
+
 }

@@ -29,32 +29,38 @@ public class LikeService {
 
     /**
      * 시설 카테고리 즐겨찾기
-     * @param userPk
+     * @param user
      * @param facilityCategoryPk
      */
     @Transactional(rollbackFor = Exception.class)
-    public void likeFacilityCategory(Long userPk, Long facilityCategoryPk) throws Exception{
+    public void likeFacilityCategory(Users user, Long facilityCategoryPk) throws Exception{
 
-        Users user = usersRepository.findById(userPk).orElseThrow();
+        FacilityCategory facilityCategory = facilityCategoryRepository.findById(facilityCategoryPk).orElseThrow(()->new NoSuchElementException("해당 시설 카테고리가 존재하지 않습니다."));
 
-        FacilityCategory facilityCategory = facilityCategoryRepository.findById(facilityCategoryPk).orElseThrow();
+        Optional<LikeFacilityCategory> likeFacilityCategory = likeFacilityCategoryRepository.findByUserAndFacilityCategory(user, facilityCategory);
 
-        if(likeFacilityCategoryRepository.existsByUserAndFacilityCategory(user, facilityCategory) == true){
-            throw new Exception("이미 즐겨찾기 완료한 시설 카테고리입니다.");
+        if(!likeFacilityCategory.isPresent()){
+            // 처음으로 즐겨찾기 되는 경우
+            LikeFacilityCategory nlikeFacilityCategory = new LikeFacilityCategory(user, facilityCategory);
+            likeFacilityCategoryRepository.save(nlikeFacilityCategory);
+        }else if(likeFacilityCategory.get().getStatus().equals(LikeFacilityCategory.Status.ACTIVE)){
+            throw new NoSuchElementException("이미 즐겨찾기 완료한 시설 카테고리입니다.");
+        }else{
+            likeFacilityCategory.get().setStatus(LikeFacilityCategory.Status.ACTIVE);
+            likeFacilityCategoryRepository.save(likeFacilityCategory.get());
         }
-        LikeFacilityCategory likeFacilityCategory = new LikeFacilityCategory(user, facilityCategory);
-        likeFacilityCategoryRepository.save(likeFacilityCategory);
+
+
     }
 
     /**
      * 시설 카테고리 즐겨찾기 취소
-     * @param userPk
+     * @param user
      * @param facilityCategoryPk
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void unlikeFacilityCategory(Long userPk, Long facilityCategoryPk) throws Exception{
-        Users user = usersRepository.findById(userPk).orElseThrow(() -> new NoSuchElementException("해당 User가 존재하지 않습니다. userPk를 확인해주세요."));
+    public void unlikeFacilityCategory(Users user, Long facilityCategoryPk) throws Exception{
 
         FacilityCategory facilityCategory = facilityCategoryRepository.findById(facilityCategoryPk).orElseThrow(()-> new NoSuchElementException("해당 시설 카테고리가 존재하지 않습니다. facilityCategoryPk를 확인해주세요."));
 
@@ -80,34 +86,39 @@ public class LikeService {
 
     /**
      * 시설 즐겨찾기
-     * @param userPk
+     * @param user
      * @param facilityPk
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void likeFacility(Long userPk, Long facilityPk) throws Exception{
-        Users user = usersRepository.findById(userPk).orElseThrow(() -> new NoSuchElementException("해당 User가 존재하지 않습니다. userPk를 확인해주세요."));
+    public void likeFacility(Users user, Long facilityPk) throws Exception{
 
         Facility facility = facilityRepository.findByIdAndStatus(facilityPk, Facility.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 시설이 존재하지 않습니다."));
 
-        if(checkFacilityLike(user, facility)){
-            throw new Exception("이미 즐겨찾기 완료한 시설 입니다.");
+        Optional<LikeFacility> likeFacility = likeFacilityRepository.findByUserAndFacility(user, facility);
+
+        if(!likeFacility.isPresent()){
+            // 처음으로 즐겨찾기 되는 경우
+            LikeFacility nlikeFacility = new LikeFacility(user, facility);
+            likeFacilityRepository.save(nlikeFacility);
+        }else if(likeFacility.get().getStatus().equals(LikeFacility.Status.ACTIVE)){
+            throw new NoSuchElementException("이미 즐겨찾기 완료한 시설입니다.");
+        }else{
+            likeFacility.get().setStatus(LikeFacility.Status.ACTIVE);
+            likeFacilityRepository.save(likeFacility.get());
         }
 
-        likeFacilityRepository.save(new LikeFacility(user, facility));
-        return;
+
 
     }
 
     /**
      * 시설 즐겨찾기 취소
-     * @param userPk
+     * @param user
      * @param facilityPk
      */
     @Transactional(rollbackFor = Exception.class)
-    public void unlikeFacility(Long userPk, Long facilityPk){
-        Users user = usersRepository.findById(userPk).orElseThrow(() -> new NoSuchElementException("해당 User가 존재하지 않습니다. userPk를 확인해주세요."));
-
+    public void unlikeFacility(Users user, Long facilityPk){
         Facility facility = facilityRepository.findByIdAndStatus(facilityPk, Facility.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 시설이 존재하지 않습니다."));
 
         LikeFacility likeFacility = likeFacilityRepository.findByUserAndFacility(user, facility).orElseThrow(()-> new NoSuchElementException("즐겨찾기한 내역이 존재하지 않습니다."));
@@ -115,5 +126,8 @@ public class LikeService {
         if(likeFacility.getStatus().equals(LikeFacility.Status.INACTIVE)){
             throw new NoSuchElementException("이미 즐겨찾기 취소 상태입니다.");
         }
+
+        likeFacility.setStatus(LikeFacility.Status.INACTIVE);
+        likeFacilityRepository.save(likeFacility);
     }
 }

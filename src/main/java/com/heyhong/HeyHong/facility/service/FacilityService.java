@@ -2,7 +2,6 @@ package com.heyhong.HeyHong.facility.service;
 
 import com.heyhong.HeyHong.facility.dto.*;
 import com.heyhong.HeyHong.facility.entity.Facility;
-import com.heyhong.HeyHong.facility.entity.FacilityCategory;
 import com.heyhong.HeyHong.facility.entity.FacilityComment;
 import com.heyhong.HeyHong.facility.entity.FacilityImage;
 import com.heyhong.HeyHong.facility.repository.FacilityCategoryRepository;
@@ -35,9 +34,9 @@ public class FacilityService {
      * @return
      * @throws Exception
      */
-    public List<FaciltyCategoryGroupDto> getFacilityCategory() throws Exception{
+    public List<FaciltyCategoryGroupDto> getFacilityCategory(Users user) throws Exception{
 
-        List<FacilityCategory> fcs = facilityCategoryRepository.findAll();
+        List<FacilityCategoryDao> fcs = facilityCategoryRepository.findFacilityCategoryListAll(user);
 
         // 편의시설, 행정시설, 학생시설
         FaciltyCategoryGroupDto fcg1 = new FaciltyCategoryGroupDto("편의시설");
@@ -45,9 +44,9 @@ public class FacilityService {
         FaciltyCategoryGroupDto fcg3 = new FaciltyCategoryGroupDto("학생시설");
 
 
-        for(FacilityCategory f : fcs){
+        for(FacilityCategoryDao f : fcs){
 
-            FacilityCategoryDto fc = new FacilityCategoryDto(f.getId(), f.getName(), f.getImageUrl());
+            FacilityCategoryDto fc = new FacilityCategoryDto(f);
 
             if(f.getCategoryGroup().equals("편의시설")){
                 fcg1.addFacilityCategory(fc);

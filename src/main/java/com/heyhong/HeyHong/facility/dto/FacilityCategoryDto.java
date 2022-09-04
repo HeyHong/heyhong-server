@@ -11,7 +11,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FacilityCategoryDto {
 
-    private Long categoryPk;
+    private Long facilityCategoryPk;
     private String categoryName;
     private String imageUrl;
+    private Boolean likeStatus;
+
+    public FacilityCategoryDto(FacilityCategoryDao facilityCategoryListDto){
+        this.facilityCategoryPk = facilityCategoryListDto.getFacilityCategoryPk();
+        this.categoryName = facilityCategoryListDto.getName();
+        this.imageUrl = facilityCategoryListDto.getImageUrl();
+        if(facilityCategoryListDto.getLikeStatus() == null){
+            this.likeStatus = false;
+        }else{
+            this.likeStatus = true;
+        }
+    }
 }

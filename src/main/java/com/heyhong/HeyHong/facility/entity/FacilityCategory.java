@@ -1,6 +1,7 @@
 package com.heyhong.HeyHong.facility.entity;
 
 import com.heyhong.HeyHong.config.auditing.BaseAuditingEntity;
+import com.heyhong.HeyHong.users.entity.LikeFacilityCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +39,10 @@ public class FacilityCategory extends BaseAuditingEntity {
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Facility> facilities = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "facilityCategory")
+    private List<LikeFacilityCategory> likeFacilityCategories = new ArrayList<>();
 
     public enum Status{
         INACTIVE, ACTIVE
