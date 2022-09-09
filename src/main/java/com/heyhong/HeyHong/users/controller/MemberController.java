@@ -46,7 +46,26 @@ public class MemberController {
 
 
     /**
-     * 시설 카테고리 즐겨찾기
+     * GET 프로필 메인
+     * @param user
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/profile")
+    public ResponseEntity<BaseResponse> retrieveProfile(@AuthenticationPrincipal Users user){
+        try{
+            ProfileDto result = memberService.retrieveUserProfileInfo(user.getId());
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, result);
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
+
+
+    /**
+     * GET 시설 카테고리 즐겨찾기
      * @param user
      * @param facilityCategoryPk
      * @return
@@ -70,7 +89,7 @@ public class MemberController {
     }
 
     /**
-     * 시설 카테고리 즐겨찾기 취소
+     * DELETE 시설 카테고리 즐겨찾기 취소
      * @param user
      * @param facilityCategoryPk
      * @return

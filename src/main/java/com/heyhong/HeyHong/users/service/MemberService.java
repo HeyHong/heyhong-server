@@ -14,6 +14,7 @@ import com.heyhong.HeyHong.hongik.repository.CollegeRepository;
 import com.heyhong.HeyHong.hongik.repository.DepartmentRepository;
 import com.heyhong.HeyHong.users.dto.LikedItem;
 import com.heyhong.HeyHong.users.dto.MainRes;
+import com.heyhong.HeyHong.users.dto.ProfileDto;
 import com.heyhong.HeyHong.users.dto.RecentComment;
 import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.repository.UsersRepository;
@@ -65,6 +66,18 @@ public class MemberService {
 
         return new MainRes("준비중", likedItemResult, recentCommentResult);
 
+    }
+
+    /**
+     * 프로필 - 유져 정보 조회
+     * @param userPk
+     * @return
+     */
+    public ProfileDto retrieveUserProfileInfo(Long userPk){
+
+        Users user = usersRepository.getById(userPk);
+
+        return new ProfileDto(user.getNickname(), user.getCollege().getName(), user.getDepartment().getName(), user.getEmail(), user.getUserId());
     }
 
     /**
