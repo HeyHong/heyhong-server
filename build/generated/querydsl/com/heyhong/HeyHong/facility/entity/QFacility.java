@@ -53,6 +53,8 @@ public class QFacility extends EntityPathBase<Facility> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<com.heyhong.HeyHong.users.entity.LikeFacility, com.heyhong.HeyHong.users.entity.QLikeFacility> likeFacilities = this.<com.heyhong.HeyHong.users.entity.LikeFacility, com.heyhong.HeyHong.users.entity.QLikeFacility>createList("likeFacilities", com.heyhong.HeyHong.users.entity.LikeFacility.class, com.heyhong.HeyHong.users.entity.QLikeFacility.class, PathInits.DIRECT2);
+
     public final StringPath location = createString("location");
 
     public final StringPath name = createString("name");

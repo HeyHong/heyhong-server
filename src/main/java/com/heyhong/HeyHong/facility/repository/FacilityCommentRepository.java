@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FacilityCommentRepository extends JpaRepository<FacilityComment, Long> {
+public interface FacilityCommentRepository extends JpaRepository<FacilityComment, Long>, QFacilityCommentRepository {
 
     List<FacilityComment> findAllByFacilityOrderByCreateAtAsc(Facility facility);
     Optional<FacilityComment> findByIdAndStatus(Long id, FacilityComment.Status status);

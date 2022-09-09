@@ -41,6 +41,7 @@ public class UserService {
      * @param user
      * @return Long
      */
+    @Transactional(rollbackFor = Exception.class)
     public Long save(Users user){
         return usersRepository.save(user).getId();
     }
@@ -51,6 +52,7 @@ public class UserService {
      * @return
      * @throws Exception
      */
+    @Transactional(rollbackFor = Exception.class)
     public Long signIn(SignInReq signInReq) throws Exception{
 
         // 이메일 인증 여부 확인
@@ -87,6 +89,26 @@ public class UserService {
 
 
     /**
+     * 비밀번호 변경
+     * @param user
+     * @param curPassword
+     * @param newPassword
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void changePassword(Users user, String curPassword, String newPassword) throws Exception{
+
+        if(!passwordEncoder.matches(curPassword, user.getPassword())){
+            throw new IllegalArgumentException("잘못된 현재 비밀번호 입니다. 비밀번호를 다시 한번 확인해주세요.");
+        }
+
+        user.setPassword(passwordEncode(newPassword));
+        usersRepository.save(user);
+
+    }
+
+
+    /**
      * 로그인
      * user db와 대조 / jwt 발급
      * @param userId
@@ -94,11 +116,11 @@ public class UserService {
      * @return String - jwt
      * @throws IllegalArgumentException
      */
-    public String login(String userId, String password) throws IllegalArgumentException{
+    public String login(String userId, String password) throws Exception{
 
         Users user = usersRepository.findByUserId(userId).orElseThrow(()->new IllegalArgumentException("가입되지 않은 회원입니다."));
 
-        if(!passwordEncoder.matches(user.getPassword(), password)){
+        if(!passwordEncoder.matches(password, user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
         return jwtTokenProvider.createToken(user.getUserId(), user.getRoles());
@@ -191,7 +213,7 @@ public class UserService {
      * @param confirmCode
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean checkConfirmEmail(Long confirmPk, String email, String confirmCode){
 
 //        ConfirmationToken token = confirmationTokenRepository.findByIdAndStatus(confirmPk, ConfirmationToken.Status.ACTIVE).orElseThrow(()-> new NoSuchElementException("해당 인증 토큰이 존재하지 않습니다. confirmPk를 확인해주세요."));
@@ -265,8 +287,6 @@ public class UserService {
         }catch (Exception e){
             throw e;
         }
-
-
     }
 
 
@@ -324,7 +344,10 @@ public class UserService {
     }
 
 
-
+    /**
+     * 회원가입 - 학과/학부 리스트
+     * @return
+     */
     public List<CollegeDeptDto> getCollegeDeptList(){
         List<College> colleges = collegeRepository.findAll();
         List<CollegeDeptDto> collegeDepts = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.heyhong.HeyHong.facility.entity;
 
 import com.heyhong.HeyHong.building.entity.Floor;
 import com.heyhong.HeyHong.config.auditing.BaseAuditingEntity;
+import com.heyhong.HeyHong.users.entity.LikeFacility;
 import com.heyhong.HeyHong.users.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,10 @@ public class Facility extends BaseAuditingEntity {
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "facility")
     private List<FacilityComment> facilityComments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "facility")
+    private List<LikeFacility> likeFacilities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id")

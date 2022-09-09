@@ -121,4 +121,9 @@ public class Users extends BaseAuditingEntity implements UserDetails {
         this.password = password;
     }
 
+    public void setCollegeAndDepartment(College college, Department department){
+        this.college = college;
+        this.department = department;
+    }
+
 }

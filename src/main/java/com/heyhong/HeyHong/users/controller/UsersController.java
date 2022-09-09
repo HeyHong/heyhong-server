@@ -192,6 +192,11 @@ public class UsersController {
     }
 
 
+    /**
+     * 비밀번호 찾기
+     * @param findUserPasswordReq
+     * @return
+     */
     @ResponseBody
     @PostMapping("/find/password")
     public ResponseEntity<BaseResponse> findUserPassword(@RequestBody FindUserPasswordReq findUserPasswordReq){
