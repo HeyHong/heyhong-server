@@ -3,6 +3,7 @@ package com.heyhong.HeyHong.config.security;
 import com.heyhong.HeyHong.users.jwt.JwtAuthenticationFilter;
 import com.heyhong.HeyHong.users.jwt.JwtProvider;
 import com.heyhong.HeyHong.users.jwt.JwtTokenProvider;
+import com.heyhong.HeyHong.users.repository.UsersRepository;
 import com.heyhong.HeyHong.users.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final WebAccessDenialHandler webAccessDenialHandler;
     private final AuthenticationEntryPointHandler authenticationEntryPointHandler;
     private final CustomUserDetailService customUserDetailService;
+    private final UsersRepository usersRepository;
+
 
 //    @Override
 //    public void configure(WebSecurity web){
@@ -95,6 +98,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPointHandler)
                 .accessDeniedHandler(webAccessDenialHandler)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, usersRepository, passwordEncoder()), UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -2,6 +2,7 @@ package com.heyhong.HeyHong.config.security;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.heyhong.HeyHong.config.ErrorCode;
+import com.heyhong.HeyHong.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.AuthenticationException;
@@ -27,7 +28,6 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
         /**
          * 토큰이 없는 경우 예외 처리
          */
-
         if(exception == null){
             errorCode = ErrorCode.UNAUTHORIZEDException;
             setResponse(response, errorCode);

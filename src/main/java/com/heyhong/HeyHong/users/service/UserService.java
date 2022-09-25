@@ -108,23 +108,23 @@ public class UserService {
     }
 
 
-    /**
-     * 로그인
-     * user db와 대조 / jwt 발급
-     * @param userId
-     * @param password
-     * @return String - jwt
-     * @throws IllegalArgumentException
-     */
-    public String login(String userId, String password) throws Exception{
-
-        Users user = usersRepository.findByUserId(userId).orElseThrow(()->new IllegalArgumentException("가입되지 않은 회원입니다."));
-
-        if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
-        }
-        return jwtTokenProvider.createToken(user.getUserId(), user.getRoles());
-    }
+//    /**
+//     * 로그인
+//     * user db와 대조 / jwt 발급
+//     * @param userId
+//     * @param password
+//     * @return String - jwt
+//     * @throws IllegalArgumentException
+//     */
+//    public String login(String userId, String password) throws Exception{
+//
+//        Users user = usersRepository.findByUserId(userId).orElseThrow(()->new IllegalArgumentException("가입되지 않은 회원입니다."));
+//
+//        if(!passwordEncoder.matches(password, user.getPassword())){
+//            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+//        }
+//        return jwtTokenProvider.createToken(user.getUserId(), user.getRoles());
+//    }
 
 
     /**
@@ -167,7 +167,7 @@ public class UserService {
      * @param email
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long createEmailConfirmationForSignUp(String email){
 
         if(!checkHongikEmailFormat(email)){

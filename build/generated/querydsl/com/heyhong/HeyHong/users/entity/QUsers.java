@@ -39,6 +39,8 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath jwtToken = createString("jwtToken");
+
     public final StringPath nickname = createString("nickname");
 
     public final ListPath<NoticeScrap, QNoticeScrap> noticeScraps = this.<NoticeScrap, QNoticeScrap>createList("noticeScraps", NoticeScrap.class, QNoticeScrap.class, PathInits.DIRECT2);

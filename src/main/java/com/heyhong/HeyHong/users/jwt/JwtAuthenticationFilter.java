@@ -1,8 +1,11 @@
 package com.heyhong.HeyHong.users.jwt;
 
+import com.heyhong.HeyHong.users.entity.Users;
+import com.heyhong.HeyHong.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -31,6 +34,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 //    }
 
     private final JwtProvider jwtProvider;
+    private final UsersRepository usersRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException{
@@ -39,7 +45,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = jwtProvider.resolveToken((HttpServletRequest) request);
 
         // 유효한 토큰인지 validate
-        if(token != null && jwtProvider.validateJwtToken(request, token)){
+        if(token != null && jwtProvider.validateJwtToken(request, token) && usersRepository.existsByUserIdAndJwtTokenAndStatus(jwtProvider.getUserInfo(token), token, Users.Status.ACTIVE)){
 
             // 유효시, 유져 정보 가져옴
             Authentication authentication = jwtProvider.getAuthentication(token);
@@ -47,6 +53,18 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // SecurityContext에 Authentication 객체 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
+//        if(token != null && jwtProvider.validateJwtToken(request, token)){
+//
+//            if(passwordEncoder.matches(token, usersRepository.findByUserIdAndStatus(jwtProvider.getUserInfo(token), Users.Status.ACTIVE).get().getJwtToken())){
+//                // 유효시, 유져 정보 가져옴
+//                Authentication authentication = jwtProvider.getAuthentication(token);
+//
+//                // SecurityContext에 Authentication 객체 저장
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//            }
+//
+//        }
 
         chain.doFilter(request, response);
 

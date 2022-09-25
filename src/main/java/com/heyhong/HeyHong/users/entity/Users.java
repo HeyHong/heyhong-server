@@ -45,6 +45,8 @@ public class Users extends BaseAuditingEntity implements UserDetails {
 
     private String email;
 
+    private String jwtToken;
+
     public enum Status{
         INACTIVE, ACTIVE
     }
@@ -124,6 +126,14 @@ public class Users extends BaseAuditingEntity implements UserDetails {
     public void setCollegeAndDepartment(College college, Department department){
         this.college = college;
         this.department = department;
+    }
+
+    public void setJwtToken(String jwtToken){
+        this.jwtToken = jwtToken;
+    }
+
+    public String getJwtToken(){
+        return this.jwtToken;
     }
 
 }

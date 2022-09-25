@@ -6,16 +6,21 @@ import com.heyhong.HeyHong.users.dto.LoginRes;
 import com.heyhong.HeyHong.users.dto.UpdateAccessTokenReq;
 import com.heyhong.HeyHong.users.dto.UpdateAccessTokenRes;
 import com.heyhong.HeyHong.users.entity.RefreshToken;
+import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.jwt.JwtProvider;
 import com.heyhong.HeyHong.users.repository.RefreshTokenRepository;
+import com.heyhong.HeyHong.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -24,15 +29,23 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
-
+    private final UsersRepository usersRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    @Transactional(rollbackFor = Exception.class)
     public LoginRes login(LoginReq loginReq) throws Exception{
 
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginReq.getUserId(), loginReq.getPassword()));
 
             Map createdToken = createToken(loginReq);
+
+            Users user = usersRepository.findByUserIdAndStatus(loginReq.getUserId(), Users.Status.ACTIVE).orElseThrow(() -> new NoSuchElementException("로그인 회원 2차 조회 시 결과, 해당 회원이 존재하지 않습니다."));
+//            user.setJwtToken(passwordEncoder.encode((String)createdToken.get("accessToken")));
+            user.setJwtToken((String)createdToken.get("accessToken"));
+
+            usersRepository.save(user);
 
             return new LoginRes((String)createdToken.get("accessToken"), (Long)createdToken.get("refreshIdx"));
         } catch (Exception e){

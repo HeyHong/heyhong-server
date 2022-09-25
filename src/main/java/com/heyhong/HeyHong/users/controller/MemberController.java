@@ -44,6 +44,39 @@ public class MemberController {
         }
     }
 
+    /**
+     * 로그아웃
+     * @param user
+     * @return
+     */
+    @ResponseBody
+    @PutMapping("/logout")
+    public ResponseEntity<BaseResponse> logout(@AuthenticationPrincipal Users user){
+        try{
+            memberService.logout(user);
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
+
+//    @ResponseBody
+//    @DeleteMapping("/secession")
+//    public ResponseEntity<BaseResponse> secession(@AuthenticationPrincipal Users user){
+//        try{
+//            memberService.secession(user);
+//            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
+//            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+//        }catch (Exception e){
+//            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+//            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+//        }
+//    }
+
+
+
 
     /**
      * GET 프로필 메인

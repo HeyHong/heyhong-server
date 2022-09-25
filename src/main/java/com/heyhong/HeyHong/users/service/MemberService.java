@@ -39,6 +39,25 @@ public class MemberService {
 
 
     /**
+     * 로그아웃
+     * @param user
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void logout(Users user) throws Exception{
+        if(user.getJwtToken().equals(null)){
+            throw new Exception("이미 로그아웃된 사용자입니다.");
+        }else{
+            user.setJwtToken(null);
+            usersRepository.save(user);
+        }
+    }
+
+//    @Transactional(rollbackFor = Exception.class)
+//    public void sucession(Users user) throws Exception{
+//
+//    }
+
+    /**
      * 메인 화면
      * @param user
      * @return
