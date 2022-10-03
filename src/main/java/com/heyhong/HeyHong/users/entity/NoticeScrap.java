@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -36,6 +38,7 @@ public class NoticeScrap extends BaseAuditingEntity {
     private CouncilNotice councilNotice;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private Users user;
 
@@ -45,5 +48,10 @@ public class NoticeScrap extends BaseAuditingEntity {
 
     public enum Status{
         INACTIVE, ACTIVE
+    }
+
+    public void setUserNullAndInactive(){
+        this.user = null;
+        this.status = NoticeScrap.Status.INACTIVE;
     }
 }

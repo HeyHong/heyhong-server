@@ -5,6 +5,7 @@ import com.heyhong.HeyHong.config.exception.UpdateSameElementException;
 import com.heyhong.HeyHong.facility.dto.LikedFacilityCategoryDao;
 import com.heyhong.HeyHong.facility.dto.LikedFacilityDao;
 import com.heyhong.HeyHong.facility.entity.Facility;
+import com.heyhong.HeyHong.facility.entity.FacilityComment;
 import com.heyhong.HeyHong.facility.repository.FacilityCategoryRepository;
 import com.heyhong.HeyHong.facility.repository.FacilityCommentRepository;
 import com.heyhong.HeyHong.facility.repository.FacilityRepository;
@@ -16,7 +17,11 @@ import com.heyhong.HeyHong.users.dto.LikedItem;
 import com.heyhong.HeyHong.users.dto.MainRes;
 import com.heyhong.HeyHong.users.dto.ProfileDto;
 import com.heyhong.HeyHong.users.dto.RecentComment;
+import com.heyhong.HeyHong.users.entity.LikeFacility;
+import com.heyhong.HeyHong.users.entity.LikeFacilityCategory;
 import com.heyhong.HeyHong.users.entity.Users;
+import com.heyhong.HeyHong.users.repository.LikeFacilityCategoryRepository;
+import com.heyhong.HeyHong.users.repository.LikeFacilityRepository;
 import com.heyhong.HeyHong.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +41,8 @@ public class MemberService {
     private final FacilityRepository facilityRepository;
     private final FacilityCategoryRepository facilityCategoryRepository;
     private final FacilityCommentRepository facilityCommentRepository;
+    private final LikeFacilityRepository likeFacilityRepository;
+    private final LikeFacilityCategoryRepository likeFacilityCategoryRepository;
 
 
     /**
@@ -52,10 +59,29 @@ public class MemberService {
         }
     }
 
-//    @Transactional(rollbackFor = Exception.class)
-//    public void sucession(Users user) throws Exception{
-//
-//    }
+    @Transactional(rollbackFor = Exception.class)
+    public void sucession(Users user) throws Exception{
+        // 댓글 모두 불러오기
+        List<FacilityComment> facilityComments = facilityCommentRepository.findAllByUser(user);
+        List<LikeFacility> likeFacilities = likeFacilityRepository.findAllByUser(user);
+        List<LikeFacilityCategory> likeFacilityCategories = likeFacilityCategoryRepository.findAllByUser(user);
+
+        // (개선) 성능 고려하여 배치 update JPQL 사용하기
+        for(FacilityComment facilityComment : facilityComments){
+            facilityComment.setUserNull();
+        }
+
+        for(LikeFacility likeFacility : likeFacilities){
+            likeFacility.setUserNullAndInactive();
+        }
+
+        for(LikeFacilityCategory likeFacilityCategory : likeFacilityCategories){
+            likeFacilityCategory.setUserNullAndInactive();
+        }
+
+        usersRepository.delete(user);
+
+    }
 
     /**
      * 메인 화면

@@ -15,5 +15,6 @@ public interface LikeFacilityRepository extends JpaRepository<LikeFacility, Long
 
     Boolean existsByUserAndFacilityAndStatus(Users user, Facility facility, LikeFacility.Status status);
     Optional<LikeFacility> findByUserAndFacility(Users user, Facility facility);
+    List<LikeFacility> findAllByUser(Users user);
 
 }

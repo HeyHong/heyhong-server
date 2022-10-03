@@ -28,7 +28,7 @@ public class FacilityComment extends BaseAuditingEntity {
     private Facility facility;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private Users user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -81,5 +81,9 @@ public class FacilityComment extends BaseAuditingEntity {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public void setUserNull(){
+        this.user = null;
     }
 }

@@ -62,18 +62,18 @@ public class MemberController {
         }
     }
 
-//    @ResponseBody
-//    @DeleteMapping("/secession")
-//    public ResponseEntity<BaseResponse> secession(@AuthenticationPrincipal Users user){
-//        try{
-//            memberService.secession(user);
-//            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
-//            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
-//        }catch (Exception e){
-//            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
-//            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
-//        }
-//    }
+    @ResponseBody
+    @DeleteMapping("/sucession")
+    public ResponseEntity<BaseResponse> secession(@AuthenticationPrincipal Users user){
+        try{
+            memberService.sucession(user);
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
 
 
 

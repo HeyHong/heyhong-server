@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -21,6 +23,7 @@ public class LikeFacilityCategory extends BaseAuditingEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private Users user;
 
@@ -44,5 +47,10 @@ public class LikeFacilityCategory extends BaseAuditingEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setUserNullAndInactive(){
+        this.user = null;
+        this.status = Status.INACTIVE;
     }
 }
