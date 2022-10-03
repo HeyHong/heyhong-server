@@ -157,6 +157,7 @@ public class FacilityService {
 
         Facility facility = facilityRepository.findById(facilityPk).orElseThrow(()-> new NoSuchElementException("해당 시설이 존재하지 않습니다. facilityPk를 확인해주세요"));
 
+        // (개선) QueryDsl로 개선
         List<FacilityComment> facilityComments = facilityCommentRepository.findAllByFacilityOrderByCreateAtAsc(facility);
 
         List<FacilityCommentDto> result = new ArrayList<>();
@@ -169,7 +170,12 @@ public class FacilityService {
                 //대댓글이 아닌 경우
                 FacilityCommentDto fcDto = null;
                 if(fc.getStatus() == FacilityComment.Status.ACTIVE){
-                    fcDto = new FacilityCommentDto(userNickName, fc);
+                    if(fc.getUser() == null){
+                        fcDto = new FacilityCommentDto("탈퇴한 사용자", fc);
+                    }else{
+                        fcDto = new FacilityCommentDto(fc.getUser().getNickname(), fc);
+                    }
+
                 }else{
                     fcDto = new FacilityCommentDto();
                 }
@@ -182,7 +188,11 @@ public class FacilityService {
 
                 FacilityCommentDto fcDto = null;
                 if(fc.getStatus() == FacilityComment.Status.ACTIVE){
-                    fcDto = new FacilityCommentDto(userNickName, fc);
+                    if(fc.getUser() == null){
+                        fcDto = new FacilityCommentDto("탈퇴한 사용자", fc);
+                    }else{
+                        fcDto = new FacilityCommentDto(fc.getUser().getNickname(), fc);
+                    }
                 }else{
                     fcDto = new FacilityCommentDto();
                 }

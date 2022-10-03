@@ -7,11 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginRes {
-    private String accessToken;
     private Long refreshIdx;
 
-    public LoginRes(String accessToken, Long refreshIdx) {
-        this.accessToken = accessToken;
+    public LoginRes(Long refreshIdx) {
         this.refreshIdx = refreshIdx;
     }
 }

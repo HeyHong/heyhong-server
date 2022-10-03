@@ -47,7 +47,7 @@ public class AuthService {
 
             usersRepository.save(user);
 
-            return new LoginRes((String)createdToken.get("accessToken"), (Long)createdToken.get("refreshIdx"));
+            return new LoginRes((Long)createdToken.get("refreshIdx"));
         } catch (Exception e){
             e.printStackTrace();
             throw new Exception("비밀번호 혹은 아이디가 잘못되었습니다");
