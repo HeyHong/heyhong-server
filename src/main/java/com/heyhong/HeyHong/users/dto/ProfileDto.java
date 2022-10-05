@@ -12,6 +12,7 @@ import lombok.Setter;
 public class ProfileDto {
 
     private String nickname;
+    private String profileImage;
     private String college;
     private String department;
     private String email;

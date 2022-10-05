@@ -33,7 +33,9 @@ public class UserService {
     private final CollegeRepository collegeRepository;
     private final DepartmentRepository departmentRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
+
     private final EmailService emailService;
+    private final AuthService authService;
 
 
     /**
@@ -65,16 +67,18 @@ public class UserService {
         // 학부, 학과 fetch
         College college = collegeRepository.findById(signInReq.getCollegePk()).orElseThrow(()->new NoSuchElementException("해당 대학이 존재하지 않습니다. client validation 확인"));
         Department department = departmentRepository.findById(signInReq.getDepartmentPk()).orElseThrow(()-> new NoSuchElementException("해당 과가 존재하지 않습니다. client validation 확인"));
-        
-        return this.save(Users.builder()
+
+        Users signInCompletedUser = usersRepository.save(Users.builder()
                 .userId(signInReq.getUserId())
                 .password(passwordEncode(signInReq.getPassword()))
                 .nickname(signInReq.getNickname())
                 .email(signInReq.getEmail())
                 .college(college)
                 .department(department).status(Users.Status.ACTIVE)
+                .profileImageUrl("https://heyhong.s3.ap-northeast-2.amazonaws.com/user_image/basic_profile_image.png")
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
+        return signInCompletedUser.getId();
     }
 
 

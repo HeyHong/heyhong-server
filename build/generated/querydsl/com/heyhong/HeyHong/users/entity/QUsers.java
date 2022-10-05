@@ -47,6 +47,8 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final StringPath password = createString("password");
 
+    public final StringPath profileImageUrl = createString("profileImageUrl");
+
     public final ListPath<String, StringPath> roles = this.<String, StringPath>createList("roles", String.class, StringPath.class, PathInits.DIRECT2);
 
     public final ListPath<com.heyhong.HeyHong.building.entity.RoomComment, com.heyhong.HeyHong.building.entity.QRoomComment> roomComments = this.<com.heyhong.HeyHong.building.entity.RoomComment, com.heyhong.HeyHong.building.entity.QRoomComment>createList("roomComments", com.heyhong.HeyHong.building.entity.RoomComment.class, com.heyhong.HeyHong.building.entity.QRoomComment.class, PathInits.DIRECT2);

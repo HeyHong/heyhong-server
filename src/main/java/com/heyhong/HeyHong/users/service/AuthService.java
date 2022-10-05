@@ -43,11 +43,10 @@ public class AuthService {
 
             Users user = usersRepository.findByUserIdAndStatus(loginReq.getUserId(), Users.Status.ACTIVE).orElseThrow(() -> new NoSuchElementException("로그인 회원 2차 조회 시 결과, 해당 회원이 존재하지 않습니다."));
 //            user.setJwtToken(passwordEncoder.encode((String)createdToken.get("accessToken")));
+            // JPA 변경감지
             user.setJwtToken((String)createdToken.get("accessToken"));
 
-            usersRepository.save(user);
-
-            return new LoginRes((Long)createdToken.get("refreshIdx"));
+            return new LoginRes((String)createdToken.get("accessToken"), (Long)createdToken.get("refreshIdx"));
         } catch (Exception e){
             e.printStackTrace();
             throw new Exception("비밀번호 혹은 아이디가 잘못되었습니다");

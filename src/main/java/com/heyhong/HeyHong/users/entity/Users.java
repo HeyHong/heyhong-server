@@ -45,6 +45,8 @@ public class Users extends BaseAuditingEntity implements UserDetails {
 
     private String email;
 
+    private String profileImageUrl;
+
     private String jwtToken;
 
     public enum Status{
@@ -134,6 +136,10 @@ public class Users extends BaseAuditingEntity implements UserDetails {
 
     public String getJwtToken(){
         return this.jwtToken;
+    }
+
+    public void setProfileImage(String profileImageUrl){
+        this.profileImageUrl = profileImageUrl;
     }
 
 }

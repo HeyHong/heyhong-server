@@ -13,6 +13,7 @@ import com.heyhong.HeyHong.hongik.entity.College;
 import com.heyhong.HeyHong.hongik.entity.Department;
 import com.heyhong.HeyHong.hongik.repository.CollegeRepository;
 import com.heyhong.HeyHong.hongik.repository.DepartmentRepository;
+import com.heyhong.HeyHong.s3.S3Uploader;
 import com.heyhong.HeyHong.users.dto.LikedItem;
 import com.heyhong.HeyHong.users.dto.MainRes;
 import com.heyhong.HeyHong.users.dto.ProfileDto;
@@ -23,13 +24,21 @@ import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.repository.LikeFacilityCategoryRepository;
 import com.heyhong.HeyHong.users.repository.LikeFacilityRepository;
 import com.heyhong.HeyHong.users.repository.UsersRepository;
+import com.heyhong.HeyHong.util.MultipartImage;
+import com.heyhong.HeyHong.util.ResizingUtil;
 import lombok.RequiredArgsConstructor;
+import marvin.image.MarvinImage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +52,9 @@ public class MemberService {
     private final FacilityCommentRepository facilityCommentRepository;
     private final LikeFacilityRepository likeFacilityRepository;
     private final LikeFacilityCategoryRepository likeFacilityCategoryRepository;
+
+    private final S3Uploader s3Uploader;
+    private final ResizingUtil resizingUtil;
 
 
     /**
@@ -122,7 +134,30 @@ public class MemberService {
 
         Users user = usersRepository.getById(userPk);
 
-        return new ProfileDto(user.getNickname(), user.getCollege().getName(), user.getDepartment().getName(), user.getEmail(), user.getUserId());
+        return new ProfileDto(user.getNickname(), user.getProfileImageUrl(), user.getCollege().getName(), user.getDepartment().getName(), user.getEmail(), user.getUserId());
+    }
+
+
+    /**
+     *
+     * @param file
+     * @param user
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserProfileImage(MultipartFile file, Users user) throws Exception {
+
+        if(!Objects.requireNonNull(file.getContentType()).contains("image")){
+            throw new IllegalArgumentException("image 형식의 파일이 아닙니다.");
+        }
+
+        MultipartFile resizedImage = resizingUtil.resizeProfileImage(file, user.getUserId(), 70, 70);
+
+        String imageUrl = s3Uploader.upload(resizedImage, "user_image");
+
+        user.setProfileImage(imageUrl);
+        usersRepository.save(user);
+
     }
 
     /**
