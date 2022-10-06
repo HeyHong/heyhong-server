@@ -34,11 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -145,19 +143,20 @@ public class MemberService {
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateUserProfileImage(MultipartFile file, Users user) throws Exception {
+    public String updateUserProfileImage(MultipartFile file, Users user) throws Exception {
+
+//        Users foundUser = usersRepository.findById(user.getId()).get();
 
         if(!Objects.requireNonNull(file.getContentType()).contains("image")){
             throw new IllegalArgumentException("image 형식의 파일이 아닙니다.");
         }
 
-        MultipartFile resizedImage = resizingUtil.resizeProfileImage(file, user.getUserId(), 70, 70);
-
+        MultipartFile resizedImage = resizingUtil.resizeProfileImage(file, user.getUserId(), 60);
         String imageUrl = s3Uploader.upload(resizedImage, "user_image");
 
         user.setProfileImage(imageUrl);
         usersRepository.save(user);
-
+        return imageUrl;
     }
 
     /**

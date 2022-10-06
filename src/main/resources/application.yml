@@ -16,8 +16,8 @@ spring:
         # item 같은 경우는 한번에 땡겨왔다 ex) 아이템이 1000개면 10번 적어놓으면 10번 loop를 돈다  1+N이 1+1+1로 만들어버리는 최적화됨 -> 실시간이면 redis cache 써야지
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 
 logging:

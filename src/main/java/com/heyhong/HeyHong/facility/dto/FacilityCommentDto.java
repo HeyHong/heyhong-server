@@ -19,18 +19,32 @@ public class FacilityCommentDto {
 
     private Long facilityCommentPk;
     private String userNickName;
+    private String userProfileImageUrl;
     private String registerDateTime;
     private String contents;
 
     private List<FacilityCommentDto> recommentList = new ArrayList<>();
 
+    // 탈퇴한 사용자인 경우의 생성자
     public FacilityCommentDto(String userNickName, FacilityComment fc){
         this.userNickName = userNickName;
-
+        this.userProfileImageUrl = null;
         this.facilityCommentPk = fc.getId();
 
         String registerDateTime = fc.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm"));
-        System.out.println("댓글 작성 시간 변환 : " + registerDateTime);
+
+        this.registerDateTime = registerDateTime;
+        this.contents = fc.getContents();
+        this.recommentList = new ArrayList<>();
+    }
+
+    // 회원인 사용자의 경우의 생성자
+    public FacilityCommentDto(String userNickName, String userProfileImageUrl, FacilityComment fc){
+        this.userNickName = userNickName;
+        this.userProfileImageUrl = userProfileImageUrl;
+        this.facilityCommentPk = fc.getId();
+
+        String registerDateTime = fc.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm"));
 
         this.registerDateTime = registerDateTime;
         this.contents = fc.getContents();

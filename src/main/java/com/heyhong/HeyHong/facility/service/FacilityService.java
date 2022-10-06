@@ -173,7 +173,7 @@ public class FacilityService {
                     if(fc.getUser() == null){
                         fcDto = new FacilityCommentDto("탈퇴한 사용자", fc);
                     }else{
-                        fcDto = new FacilityCommentDto(fc.getUser().getNickname(), fc);
+                        fcDto = new FacilityCommentDto(fc.getUser().getNickname(), fc.getUser().getProfileImageUrl(), fc);
                     }
 
                 }else{
@@ -191,7 +191,7 @@ public class FacilityService {
                     if(fc.getUser() == null){
                         fcDto = new FacilityCommentDto("탈퇴한 사용자", fc);
                     }else{
-                        fcDto = new FacilityCommentDto(fc.getUser().getNickname(), fc);
+                        fcDto = new FacilityCommentDto(fc.getUser().getNickname(), fc.getUser().getProfileImageUrl(), fc);
                     }
                 }else{
                     fcDto = new FacilityCommentDto();
