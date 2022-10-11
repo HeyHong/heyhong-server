@@ -32,8 +32,6 @@ public class FacilityController {
     @ResponseBody
     @GetMapping("/category")
     public ResponseEntity<BaseResponse> getFacilityCategoryList(@AuthenticationPrincipal Users user){
-        System.out.println("------controller------");
-        System.out.println(user.getUserId());
 
         try {
             List<FaciltyCategoryGroupDto> result = facilityService.getFacilityCategory(user);

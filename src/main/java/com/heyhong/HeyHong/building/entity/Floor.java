@@ -30,6 +30,9 @@ public class Floor extends BaseAuditingEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "mapImageUrl")
+    private String mapImageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id")
     private Building building;
@@ -48,6 +51,10 @@ public class Floor extends BaseAuditingEntity {
 
     public enum Status{
         INACTIVE, ACTIVE
+    }
+
+    public void setMapImageUrl(String mapImageUrl) {
+        this.mapImageUrl = mapImageUrl;
     }
 }
 

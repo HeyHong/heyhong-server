@@ -4,7 +4,6 @@ package com.heyhong.HeyHong.users.service;
 import com.heyhong.HeyHong.config.exception.UpdateSameElementException;
 import com.heyhong.HeyHong.facility.dto.LikedFacilityCategoryDao;
 import com.heyhong.HeyHong.facility.dto.LikedFacilityDao;
-import com.heyhong.HeyHong.facility.entity.Facility;
 import com.heyhong.HeyHong.facility.entity.FacilityComment;
 import com.heyhong.HeyHong.facility.repository.FacilityCategoryRepository;
 import com.heyhong.HeyHong.facility.repository.FacilityCommentRepository;
@@ -24,10 +23,8 @@ import com.heyhong.HeyHong.users.entity.Users;
 import com.heyhong.HeyHong.users.repository.LikeFacilityCategoryRepository;
 import com.heyhong.HeyHong.users.repository.LikeFacilityRepository;
 import com.heyhong.HeyHong.users.repository.UsersRepository;
-import com.heyhong.HeyHong.util.MultipartImage;
 import com.heyhong.HeyHong.util.ResizingUtil;
 import lombok.RequiredArgsConstructor;
-import marvin.image.MarvinImage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,6 +66,11 @@ public class MemberService {
         }
     }
 
+    /**
+     * 탈퇴하기
+     * @param user
+     * @throws Exception
+     */
     @Transactional(rollbackFor = Exception.class)
     public void sucession(Users user) throws Exception{
         // 댓글 모두 불러오기
@@ -137,7 +139,7 @@ public class MemberService {
 
 
     /**
-     *
+     * 프로필 이미지 변경하기
      * @param file
      * @param user
      * @throws Exception
@@ -157,6 +159,27 @@ public class MemberService {
         user.setProfileImage(imageUrl);
         usersRepository.save(user);
         return imageUrl;
+    }
+
+    /**
+     * 닉네임 변경하기
+     * @param user
+     * @param nickname
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserNickname(Users user, String nickname) throws Exception{
+        if(user.getNickname().equals(nickname)){
+            throw new IllegalArgumentException("이전과 같은 닉네임입니다.");
+        }
+
+        if(usersRepository.existsByNicknameAndStatus(nickname, Users.Status.ACTIVE)){
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
+
+        user.setNickname(nickname);
+        usersRepository.save(user);
+        return;
     }
 
     /**

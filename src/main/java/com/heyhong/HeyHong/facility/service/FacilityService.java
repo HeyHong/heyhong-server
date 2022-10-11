@@ -1,5 +1,7 @@
 package com.heyhong.HeyHong.facility.service;
 
+import com.heyhong.HeyHong.building.entity.Floor;
+import com.heyhong.HeyHong.building.repository.FloorRepository;
 import com.heyhong.HeyHong.facility.dto.*;
 import com.heyhong.HeyHong.facility.entity.Facility;
 import com.heyhong.HeyHong.facility.entity.FacilityComment;
@@ -27,6 +29,7 @@ public class FacilityService {
     private final FacilityRepository facilityRepository;
     private final FacilityCommentRepository facilityCommentRepository;
     private final FacilityImageRepository facilityImageRepository;
+    private final FloorRepository floorRepository;
     private final LikeService likeService;
 
     /**
@@ -211,7 +214,7 @@ public class FacilityService {
      * @param facilityCommentPk
      * @param contents
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateFacilityComment(Long facilityCommentPk, String contents){
 
         FacilityComment fc = facilityCommentRepository.findByIdAndStatus(facilityCommentPk, FacilityComment.Status.ACTIVE).orElseThrow(()->new NoSuchElementException("존재하지 않는 댓글이거나 이미 삭제된 댓글입니다."));
@@ -225,7 +228,7 @@ public class FacilityService {
      * 시설 댓글 삭제
      * @param facilityCommentPk
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteFacilityComment(Long facilityCommentPk){
 
         FacilityComment fc = facilityCommentRepository.findByIdAndStatus(facilityCommentPk, FacilityComment.Status.ACTIVE).orElseThrow(()->new NoSuchElementException("존재하지 않는 댓글이거나 이미 삭제된 댓글입니다."));
@@ -250,12 +253,10 @@ public class FacilityService {
         FacilityDetailRes result;
         //facility 기반으로 FacilityDetailRes 생성
         if(facility.getFloor() == null) {
-            System.out.println("없음");
             result = new FacilityDetailRes(facility);
         }else{
-            System.out.println("있음");
-            Long floorPk = facility.getFloor().getId();
-            result = new FacilityDetailRes(facility, floorPk);
+            Floor floor = facility.getFloor();
+            result = new FacilityDetailRes(facility, floor.getId(), floor.getMapImageUrl());
         }
 
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -81,8 +82,14 @@ public class MemberController {
         }
     }
 
+    /**
+     * 프로필 이미지 변경
+     * @param user
+     * @param multipartFile
+     * @return
+     */
     @ResponseBody
-    @PutMapping("/profile-image")
+    @PatchMapping("/profile-image")
     public ResponseEntity<BaseResponse> updateUserProfileImage(@AuthenticationPrincipal Users user, @RequestParam("image")MultipartFile multipartFile){
         try{
             String imageUrl = memberService.updateUserProfileImage(multipartFile, user);
@@ -98,6 +105,22 @@ public class MemberController {
         }
     }
 
+    @ResponseBody
+    @PatchMapping("/nickname")
+    public ResponseEntity<BaseResponse> updateUserNickname(@AuthenticationPrincipal Users user, @RequestBody Map<String, String> req){
+        try{
+            System.out.println("----update controller----");
+            memberService.updateUserNickname(user, req.get("nickname"));
+            BaseResponse res = new BaseResponse(BaseResponseStatus.OK, BaseResponseStatus.OK.getMessage());
+            return new ResponseEntity<>(res, BaseResponseStatus.OK.getCode());
+        }catch (IllegalStateException e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
+        }catch (Exception e){
+            BaseResponse res = new BaseResponse(BaseResponseStatus.SERVER_ERROR, e.getMessage());
+            return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.SERVER_ERROR.getCode());
+        }
+    }
 
 
 

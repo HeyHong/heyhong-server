@@ -19,6 +19,7 @@ public class FacilityDetailRes {
     private String name;
     private String location;
     private Long floorPk;
+    private String floorImageUrl;
     private String description;
     private List<String> images = new ArrayList<>();
     private String opening_hours;
@@ -41,6 +42,7 @@ public class FacilityDetailRes {
         this.name = f.getName();
         this.location = f.getLocation();
         this.floorPk = null;
+        this.floorImageUrl = null;
         this.description = f.getDescription();
 
         this.opening_hours = f.getOpening_hours();
@@ -58,10 +60,11 @@ public class FacilityDetailRes {
         this.homepage3_url = f.getHomepage3_url();
     }
 
-    public FacilityDetailRes(Facility f, Long floorPk){
+    public FacilityDetailRes(Facility f, Long floorPk, String floorImageUrl){
         this.name = f.getName();
         this.location = f.getLocation();
         this.floorPk = floorPk;
+        this.floorImageUrl = floorImageUrl;
         this.description = f.getDescription();
 
         this.opening_hours = f.getOpening_hours();
