@@ -11,6 +11,6 @@ import java.util.List;
 public interface QFacilityRepository {
 
     List<FacilityCommentCountDto> findFacilityCommentCount(ArrayList<Long> ids);
-    List<Facility> findAllByFacilityCategoryOrderById(Long facilityCategoryId);
+    List<Facility> findAllByFacilityCategoryAndStatusOrderById(Long facilityCategoryId, Facility.Status status);
     List<LikedFacilityDao> findAllLikedFacility(Users user);
 }

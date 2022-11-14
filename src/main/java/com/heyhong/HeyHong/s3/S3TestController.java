@@ -51,23 +51,26 @@ public class S3TestController {
 
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/app/users/facility/s3images")
-    public String uploadRelatedFacility(@RequestParam("images") MultipartFile multipartFile, @RequestParam String object, @RequestParam Long id) throws IOException{
+    public String uploadRelatedFacility(@RequestParam("images") MultipartFile multipartFile, @RequestParam Long id) throws IOException{
+        try{
+            Facility f = facilityRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 facility가 존재하지 않습니다."));
 
-        if(object.equals("시설이미지")){
-
-            Optional<Facility> f = facilityRepository.findById(id);
+            if(!Objects.requireNonNull(multipartFile.getContentType()).contains("image")){
+                throw new IllegalArgumentException("image 형식의 파일이 아닙니다.");
+            }
 
             //파일 압축 필요
+//            MultipartFile resizedMultifileImage = resizingUtil.resizeImage(multipartFile, 800);
 
             String imageUrl = s3Uploader.upload(multipartFile, "facility_image");
-            FacilityImage facilityImage = new FacilityImage(f.get(), imageUrl);
+            FacilityImage facilityImage = new FacilityImage(f, imageUrl);
             facilityImageRepository.save(facilityImage);
 
             return imageUrl;
-        }
-        else{
-            return "해당되지 않는 업로드";
+        }catch (Exception e){
+            return "해당되지 않는 업로드" + e.getMessage();
         }
 
     }
@@ -92,5 +95,6 @@ public class S3TestController {
             return e.getMessage();
         }
     }
+
 
 }

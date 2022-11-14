@@ -83,7 +83,7 @@ public class FacilityService {
      */
     public List<FacilityListItemDto> getFacilityList(Long facilityCategoryId){
 
-        List<Facility> facilities = facilityRepository.findAllByFacilityCategoryOrderById(facilityCategoryId);
+        List<Facility> facilities = facilityRepository.findAllByFacilityCategoryAndStatusOrderById(facilityCategoryId, Facility.Status.ACTIVE);
 
         if(facilities.isEmpty()){
             throw new NoSuchElementException("해당 시설 카테고리는 아직 등록되지 않았거나 존재하지 않습니다.");

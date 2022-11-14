@@ -40,9 +40,10 @@ public class QFacilityRepositoryImpl implements QFacilityRepository{
     }
 
     @Override
-    public List<Facility> findAllByFacilityCategoryOrderById(Long facilityCategoryId){
+    public List<Facility> findAllByFacilityCategoryAndStatusOrderById(Long facilityCategoryId, Facility.Status status){
         return jpaQueryFactory.selectFrom(qFacility)
                 .where(qFacility.facilityCategory.id.eq(facilityCategoryId))
+                .where(qFacility.status.eq(status))
                 .orderBy(qFacility.id.asc())
                 .fetch();
 

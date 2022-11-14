@@ -178,6 +178,10 @@ public class UserService {
             throw new IllegalArgumentException("학우의 이메일이 아닙니다");
         }
 
+        if(usersRepository.existsByEmailAndStatus(email, Users.Status.ACTIVE)){
+            throw new IllegalArgumentException("이미 가입되어있는 이메일입니다.");
+        }
+
         // 인증 번호 생성 및 인증 번호 저장
         ConfirmationToken confirmationToken = new ConfirmationToken(email);
         Long confirmationTokenPk;

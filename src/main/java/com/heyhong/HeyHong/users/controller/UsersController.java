@@ -99,7 +99,7 @@ public class UsersController {
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.OK.getCode());
         }catch (IllegalArgumentException e){
 
-            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, "학교 이메일이 아닙니다.");
+            BaseResponse res = new BaseResponse(BaseResponseStatus.REQUEST_ERROR, e.getMessage());
             return new ResponseEntity<BaseResponse>(res, BaseResponseStatus.REQUEST_ERROR.getCode());
 
         }catch (Exception e){

@@ -121,7 +121,7 @@ public class MemberService {
         //최근 댓글 3개 repository로부터 추출
         List<RecentComment> recentCommentResult = facilityCommentRepository.findRecentCommentByLimit(3L);
 
-        return new MainRes("준비중", likedItemResult, recentCommentResult);
+        return new MainRes("https://heyhong.s3.ap-northeast-2.amazonaws.com/%E1%84%92%E1%85%A9%E1%86%BC%E1%84%80%E1%85%B3%E1%84%8B%E1%85%AA%E1%84%90%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%83%E1%85%A9_221012_2800px.png", likedItemResult, recentCommentResult);
 
     }
 
@@ -153,8 +153,8 @@ public class MemberService {
             throw new IllegalArgumentException("image 형식의 파일이 아닙니다.");
         }
 
-        MultipartFile resizedImage = resizingUtil.resizeProfileImage(file, user.getUserId(), 60);
-        String imageUrl = s3Uploader.upload(resizedImage, "user_image");
+//        MultipartFile resizedImage = resizingUtil.resizeProfileImage(file, user.getUserId(), 100);
+        String imageUrl = s3Uploader.upload(file, "user_image");
 
         user.setProfileImage(imageUrl);
         usersRepository.save(user);
