@@ -12,7 +12,6 @@
 </p>
 타학교에 비해 홍익대학교는 복잡한 건물 구조와 학교의 정보들이 흩어져있다. 헤이홍은 학교의 시설/관련 정보를 한눈에 모아볼 수 있는 커뮤니티형 어플이다.
 <p align="center">
-GIF Images
 </p>
 
 <br>
@@ -21,7 +20,7 @@ GIF Images
 
 | Spring boot | JPA |  QueryDSL  |  AWS  |
 | :--------: | :--------: | :------: | :-----: |
-|   ![sb]    |   ![jpa]    | ![dsl] | ![ec2] ![rds] ![s3] |
+|   ![sb](/images/spring.png){width="40%"}    |   ![jpa]    | ![dsl] | ![ec2] ![rds] ![s3] |
 
 <br>
 
@@ -41,7 +40,7 @@ GIF Images
 
 <!-- Stack Icon Refernces -->
 
-[sb]: /images/spring.png
+[comment]: <> ([sb]: /images/spring.png )
 [jpa]: /images/jpa.png
 [dsl]: /images/queryDsl.png
 [ec2]: /images/ec2.png
