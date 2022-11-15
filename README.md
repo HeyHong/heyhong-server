@@ -20,7 +20,7 @@
 
 | Spring boot | JPA |  QueryDSL  |  AWS  |
 | :--------: | :--------: | :------: | :-----: |
-|   ![sb](/images/spring.png){width="40%"}    |   ![jpa]    | ![dsl] | ![ec2] ![rds] ![s3] |
+|   ![sb](    |   ![jpa]    | ![dsl] | ![ec2] ![rds] ![s3] |
 
 <br>
 
@@ -40,7 +40,7 @@
 
 <!-- Stack Icon Refernces -->
 
-[comment]: <> ([sb]: /images/spring.png )
+[sb]: /images/spring.png 
 [jpa]: /images/jpa.png
 [dsl]: /images/queryDsl.png
 [ec2]: /images/ec2.png
